@@ -234,7 +234,7 @@ tr:hover td{background:#fafafa}
     <div class="avatar">U</div>
     <div>
       <div class="user-name">CALMO Ulrich</div>
-      <div class="user-sub">EYNOR Formation</div>
+      <div id="api-status" style="font-size:10px;color:var(--txm)">Vérification IA...</div>
     </div>
   </div>
 </aside>
@@ -410,12 +410,14 @@ tr:hover td{background:#fafafa}
 <!-- ═══ CAMPAGNES ═════════════════════════════════════════════════════════════ -->
 <div class="page" id="p-camp">
   <div class="page-greeting">Campagnes</div>
-  <div class="page-sub">Séquences automatisées de prospection</div>
-  <div class="card" style="text-align:center;padding:40px">
-    <div style="font-size:36px;margin-bottom:10px">📣</div>
-    <div style="font-size:14px;font-weight:600;margin-bottom:6px">Bientôt disponible</div>
-    <div style="font-size:13px;color:var(--txm)">Les campagnes multi-touch automatisées arrivent dans la prochaine version.</div>
+  <div class="page-sub">Séquences J0 → J4 → J12 automatisées</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;font-size:12px;color:#166534">
+      Les campagnes envoient les messages J0 aux prospects "à envoyer" du CRM et programment les relances J4 et J12.
+    </div>
+    <button class="btn btn-p" onclick="openCreateCampaign()">+ Créer une campagne</button>
   </div>
+  <div id="camp-list"></div>
 </div>
 
 <!-- ═══ POSTS LINKEDIN ════════════════════════════════════════════════════════ -->
@@ -444,6 +446,13 @@ tr:hover td{background:#fafafa}
       </div>
       <div class="fg"><label class="flbl">Contexte / idée (optionnel)</label>
         <textarea class="fta" id="pa-detail" placeholder="ex : Formation intra PME Mérignac, 6 techniciens en une journée..."></textarea>
+      </div>
+      <div style="background:#f9fafb;border:1px solid var(--brd);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px">
+        <div style="color:var(--txm);margin-bottom:4px">Style actif :</div>
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <b id="selected-style-name" style="color:var(--v)">Aucun (style EYNOR par défaut)</b>
+          <button class="btn btn-g" style="font-size:11px;padding:3px 8px" onclick="goPage('studio')">Changer</button>
+        </div>
       </div>
       <button class="btn btn-p btn-full" id="btn-gen-post">✍️ Générer le post</button>
     </div>
@@ -639,14 +648,128 @@ tr:hover td{background:#fafafa}
 
 <!-- Modal ajout style -->
 <div class="mo" id="mo-style">
-  <div class="mbox">
-    <div class="mtitle">Analyser un profil LinkedIn</div>
-    <div class="fg"><label class="flbl">Nom du profil</label><input class="fi" id="style-nom" placeholder="ex : Marvin Ndiaye"></div>
-    <div class="fg"><label class="flbl">URL LinkedIn</label><input class="fi" id="style-url" placeholder="https://linkedin.com/in/..."></div>
-    <div class="fg"><label class="flbl">3 exemples de posts (1 par ligne)</label><textarea class="fta" id="style-posts" style="min-height:100px" placeholder="Exemple 1&#10;Exemple 2&#10;Exemple 3"></textarea></div>
+  <div class="mbox" style="max-width:520px">
+    <div class="mtitle">🎨 Analyser un profil LinkedIn</div>
+    <div class="fg"><label class="flbl">Nom du profil *</label><input class="fi" id="style-nom" placeholder="ex : Marvin Ndiaye"></div>
+    <div class="fg"><label class="flbl">URL LinkedIn (optionnel)</label><input class="fi" id="style-url" placeholder="https://linkedin.com/in/..."></div>
+    <div class="fg">
+      <label class="flbl">Exemples de posts (séparez chaque post par une ligne <code>---</code>) *</label>
+      <textarea class="fta" id="style-posts" style="min-height:150px" placeholder="Collez ici le texte d'un post LinkedIn...
+---
+Deuxieme post ici...
+---
+Troisieme post..."></textarea>
+      <div style="font-size:11px;color:var(--txm);margin-top:4px">3 exemples minimum pour une meilleure analyse. Copiez le texte brut des posts (sans images).</div>
+    </div>
+    <div style="background:#f0f4ff;border:1px solid #c7d7fd;border-radius:8px;padding:10px;font-size:12px;color:#3b4e8c;margin-bottom:14px">
+      ⚡ Si l'IA est connectée (serveur local actif), Claude analyse automatiquement le style et génère un prompt personnalisé. Sinon, le profil est ajouté avec un prompt générique.
+    </div>
     <div class="mact">
       <button class="btn btn-g" onclick="closeMo('mo-style')">Annuler</button>
-      <button class="btn btn-p" onclick="saveStyle()">Analyser</button>
+      <button class="btn btn-p" id="btn-analyze-style" onclick="saveStyle2()">Analyser le style</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal détail lead -->
+<div class="mo" id="mo-lead-detail">
+  <div class="mbox" style="max-width:580px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div>
+        <div class="mtitle" id="detail-nom" style="margin-bottom:2px"></div>
+        <div style="font-size:13px;color:var(--txm)">
+          <span id="detail-ent"></span> · <span id="detail-poste"></span> · <span id="detail-canal"></span>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div id="detail-statut" style="font-size:12px;color:var(--txm)"></div>
+        <div id="detail-date" style="font-size:11px;color:var(--txm);margin-top:2px"></div>
+      </div>
+    </div>
+
+    <!-- Messages générés -->
+    <div style="background:#f9fafb;border:1px solid var(--brd);border-radius:8px;padding:12px;margin-bottom:14px">
+      <div style="font-size:12px;font-weight:600;color:var(--txm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">Messages générés</div>
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:500;color:var(--txm)">LinkedIn</span>
+          <button class="copy-btn" style="position:static" onclick="cp(document.getElementById('detail-msg-li').textContent)">Copier</button>
+        </div>
+        <div id="detail-msg-li" style="font-size:12px;color:var(--txs);line-height:1.5"></div>
+      </div>
+      <div style="border-top:1px solid var(--brd);padding-top:8px;margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:500;color:var(--txm)">Email J0</span>
+          <button class="copy-btn" style="position:static" onclick="cp(document.getElementById('detail-msg-j0').textContent)">Copier</button>
+        </div>
+        <div id="detail-msg-j0" style="font-size:12px;color:var(--txs);line-height:1.5;white-space:pre-wrap;max-height:80px;overflow-y:auto"></div>
+      </div>
+      <div style="border-top:1px solid var(--brd);padding-top:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+          <span style="font-size:11px;font-weight:500;color:var(--txm)">Relance J4</span>
+          <button class="copy-btn" style="position:static" onclick="cp(document.getElementById('detail-msg-j4').textContent)">Copier</button>
+        </div>
+        <div id="detail-msg-j4" style="font-size:12px;color:var(--txs);line-height:1.5;white-space:pre-wrap;max-height:60px;overflow-y:auto"></div>
+      </div>
+    </div>
+
+    <!-- Historique -->
+    <div style="font-size:12px;font-weight:600;color:var(--txm);margin-bottom:8px;text-transform:uppercase;letter-spacing:.4px">Historique des messages</div>
+    <div id="lead-history" style="max-height:160px;overflow-y:auto;margin-bottom:12px;border:1px solid var(--brd);border-radius:8px;padding:8px"></div>
+
+    <!-- Ajouter un message -->
+    <div style="background:#f9fafb;border:1px solid var(--brd);border-radius:8px;padding:12px">
+      <div style="font-size:12px;font-weight:600;color:var(--txm);margin-bottom:8px">Ajouter un message à l'historique</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div>
+          <label class="flbl">Type</label>
+          <select class="fs" id="detail-msg-type" style="font-size:12px">
+            <option value="sortant">Envoyé</option>
+            <option value="entrant">Reçu</option>
+          </select>
+        </div>
+        <div>
+          <label class="flbl">Étape</label>
+          <select class="fs" id="detail-msg-etape" style="font-size:12px">
+            <option value="J0">J0 — Premier contact</option>
+            <option value="J4">J4 — Relance</option>
+            <option value="J12">J12 — Dernière relance</option>
+            <option value="réponse">Réponse reçue</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+      </div>
+      <textarea class="fta" id="detail-new-msg" style="min-height:60px;font-size:12px;margin-bottom:8px" placeholder="Texte du message..."></textarea>
+      <button class="btn btn-p" style="font-size:12px;width:100%" onclick="addLeadMessage()">+ Ajouter à l'historique</button>
+    </div>
+
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-lead-detail')">Fermer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal création campagne -->
+<div class="mo" id="mo-camp">
+  <div class="mbox">
+    <div class="mtitle">📣 Créer une campagne</div>
+    <div class="fg"><label class="flbl">Nom de la campagne *</label><input class="fi" id="camp-nom" placeholder="ex : Campagne DRH PME Gironde"></div>
+    <div class="fg"><label class="flbl">ICP ciblé</label>
+      <select class="fs" id="camp-icp">
+        <option value="drh">DRH / RH — PME industrie/BTP</option>
+        <option value="qhse">Responsable QHSE — ETI</option>
+        <option value="tech">Responsable technique / chef d'atelier</option>
+        <option value="ve">Gestionnaire de flotte VE</option>
+        <option value="of">OF partenaire hors Gironde</option>
+      </select>
+    </div>
+    <div class="fg"><label class="flbl">Limite d'envois par jour</label><input class="fi" id="camp-limit" type="number" value="10" min="1" max="50"></div>
+    <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:10px;font-size:12px;color:#9a3412;margin-bottom:14px">
+      ⚠️ La séquence J0/J4/J12 est préparer automatiquement à partir des prospects "\u00e0 envoyer" dans le CRM. La campagne marque les messages comme envoyés et planifie les relances.
+    </div>
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-camp')">Annuler</button>
+      <button class="btn btn-p" onclick="saveNewCampaign()">Créer la campagne</button>
     </div>
   </div>
 </div>
