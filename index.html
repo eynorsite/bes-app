@@ -311,71 +311,79 @@ tr:hover td { background: rgba(255,255,255,0.02); }
       <div class="page-sub">Publie des posts et envoie des messages directement depuis BES</div>
     </div>
 
+    <!-- Statuts -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
+      <span class="li-badge li-off" id="li-status-badge">⚪ Non connecté</span>
+      <span class="li-badge li-off" id="ext-status-badge">⚪ Extension non installée</span>
+      <span id="li-profile-info" style="font-size:13px;display:none"></span>
+    </div>
+
     <div class="grid-2" style="margin-bottom:16px">
+
+      <!-- Carte 1 : OAuth LinkedIn -->
       <div class="card">
-        <div class="card-title">1. Connecter ton compte LinkedIn</div>
+        <div class="card-title">1. Connexion LinkedIn OAuth</div>
+        <div class="form-group">
+          <label class="form-label">Client ID <span style="color:var(--green)">(✓ pré-configuré)</span></label>
+          <input class="form-input" id="li-client-id" value="78n87entgvqaup" readonly style="color:var(--green);cursor:default">
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL du Worker Cloudflare</label>
+          <input class="form-input" id="li-worker-url" placeholder="https://bes-oauth.TON-COMPTE.workers.dev">
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Nécessaire pour l'échange OAuth sécurisé. Guide ci-dessous.</div>
+        </div>
         <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-          <span class="li-badge li-off" id="li-status-badge">⚪ LinkedIn non connecté</span>
-          <span class="li-badge li-off" id="ext-status-badge">⚪ Extension non installée</span>
-        </div>
-        <div class="form-group" style="margin-bottom:10px">
-          <label class="form-label">Client ID de ton app LinkedIn Developer</label>
-          <input class="form-input" id="li-client-id" placeholder="86xyz... (depuis developers.linkedin.com)">
-        </div>
-        <div class="form-group" style="margin-bottom:14px">
-          <label class="form-label">Token d'accès (après connexion OAuth)</label>
-          <input class="form-input" id="li-token" type="password" placeholder="Colle ton access_token ici">
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
           <button class="btn btn-primary" id="btn-li-save-config">💾 Sauvegarder</button>
-          <button class="btn btn-primary" id="btn-li-connect" style="background:#0077b5">🔗 Connecter LinkedIn</button>
-          <button class="btn btn-secondary" id="btn-li-disconnect" style="display:none">Déconnecter</button>
+          <button class="btn btn-primary" id="btn-li-connect" style="background:#0077b5">🔗 Se connecter à LinkedIn</button>
+          <button class="btn btn-secondary" id="btn-li-disconnect" style="display:none">🔓 Déconnecter</button>
         </div>
-        <div style="margin-top:14px;padding:12px;background:rgba(109,31,224,.08);border:1px solid rgba(109,31,224,.2);border-radius:8px;font-size:12px;color:#c4b5fd;line-height:1.7">
-          <b>Comment obtenir le Client ID :</b><br>
-          1. Va sur <a href="https://www.linkedin.com/developers/apps/new" target="_blank" style="color:#a78bfa">linkedin.com/developers/apps/new</a><br>
-          2. Crée une app "EYNOR BES"<br>
-          3. Onglet Auth → copie le <b>Client ID</b><br>
-          4. Active le scope <b>w_member_social</b><br>
-          5. Redirect URL : <code style="background:#0d0d12;padding:2px 5px;border-radius:3px">https://eynorsite.github.io/bes-app/callback.html</code>
+        <div style="padding:12px;background:rgba(109,31,224,.08);border:1px solid rgba(109,31,224,.2);border-radius:8px;font-size:12px;color:#c4b5fd;line-height:1.8">
+          <b>Déployer le Worker Cloudflare (5 min) :</b><br>
+          1. Va sur <a href="https://dash.cloudflare.com" target="_blank" style="color:#a78bfa">dash.cloudflare.com</a> → Workers → Créer<br>
+          2. Colle le code du fichier <code>worker/worker.js</code> depuis <a href="https://github.com/eynorsite/bes-app" target="_blank" style="color:#a78bfa">GitHub</a><br>
+          3. Variables du Worker → Ajoute <code>LI_CLIENT_SECRET</code> avec ta valeur<br>
+          4. Copie l'URL du Worker et colle-la ci-dessus<br>
+          5. Clique <b>Sauvegarder</b> puis <b>Se connecter à LinkedIn</b>
         </div>
       </div>
 
+      <!-- Carte 2 : Extension Chrome -->
       <div class="card">
-        <div class="card-title">2. Installer l'extension Chrome</div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:14px">
-          L'extension permet d'envoyer les messages de prospection directement sur LinkedIn sans copier-coller.
+        <div class="card-title">2. Extension Chrome — envoi automatique</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:12px">
+          L'extension envoie les messages de prospection directement dans la boîte de message LinkedIn.
         </div>
-        <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text);line-height:1.8;margin-bottom:14px">
-          <b style="color:#4ade80">Installation en 3 étapes :</b><br>
-          1. Télécharge le dossier <code>extension/</code> depuis <a href="https://github.com/eynorsite/bes-app" target="_blank" style="color:#a78bfa">github.com/eynorsite/bes-app</a><br>
-          2. Chrome → <b>chrome://extensions</b> → Mode développeur ON<br>
-          3. "Charger l'extension non empaquetée" → sélectionne le dossier <code>extension/</code>
+        <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text);line-height:1.9;margin-bottom:12px">
+          <b style="color:#4ade80">① Télécharger</b><br>
+          → <a href="https://github.com/eynorsite/bes-app/tree/main/extension" target="_blank" style="color:#a78bfa">github.com/eynorsite/bes-app</a> → dossier <code>extension/</code><br><br>
+          <b style="color:#4ade80">② Installer dans Chrome</b><br>
+          → <code>chrome://extensions</code> → Mode développeur ON<br>
+          → "Charger l'extension non empaquetée" → dossier <code>extension/</code><br><br>
+          <b style="color:#4ade80">③ Copier l'ID</b><br>
+          → L'ID apparaît sous le nom de l'extension (ex: <code>abcdefgh...</code>)
         </div>
         <div class="form-group">
-          <label class="form-label">ID de l'extension (après installation)</label>
-          <input class="form-input" id="li-ext-id" placeholder="abcdefghijklmnop... (depuis chrome://extensions)">
+          <label class="form-label">ID de l'extension Chrome</label>
+          <input class="form-input" id="li-ext-id" placeholder="abcdefghijklmnopqrstuvwx">
         </div>
         <button class="btn btn-secondary" id="btn-ext-save">💾 Sauvegarder l'ID</button>
-        <div style="margin-top:10px;font-size:12px;color:var(--text-muted)">
-          L'ID s'affiche sous le nom de l'extension dans chrome://extensions
-        </div>
       </div>
     </div>
 
+    <!-- Publier un post -->
     <div class="card">
-      <div class="card-title">Test — Publier un post LinkedIn</div>
+      <div class="card-title">📤 Publier un post LinkedIn</div>
       <div class="form-group">
-        <label class="form-label">Texte du post</label>
-        <textarea class="form-textarea" id="li-test-post" placeholder="Texte de ton post LinkedIn..." style="min-height:120px"></textarea>
+        <textarea class="form-textarea" id="li-test-post" placeholder="Colle ton post ici, ou génère-en un depuis l'onglet Posts LinkedIn puis reviens ici..." style="min-height:140px"></textarea>
       </div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-primary" id="btn-li-publish" style="background:#0077b5">📤 Publier sur LinkedIn</button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-primary" id="btn-li-publish" style="background:#0077b5">📤 Publier maintenant sur LinkedIn</button>
         <button class="btn btn-secondary" id="btn-li-copy-post">📋 Copier seulement</button>
       </div>
-      <div style="margin-top:10px;font-size:12px;color:var(--text-muted)">
-        Requiert un token d'accès valide avec le scope <code>w_member_social</code>.
+      <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">
+        La publication nécessite d'être connecté via OAuth + avoir le Worker Cloudflare configuré.
       </div>
+      <div id="li-publish-result" style="margin-top:10px;font-size:13px;display:none"></div>
     </div>
   </div>
 
