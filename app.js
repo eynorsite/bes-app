@@ -209,7 +209,8 @@ async function loadPipeline(filter = currentFilter) {
         </select>
       </td>
       <td style="color:var(--text-muted);">${l.date || ''}</td>
-      <td>
+      <td style="display:flex;gap:5px;align-items:center">
+        <button class="btn btn-secondary" style="font-size:11px;padding:4px 8px;background:#0077b5;color:#fff;border:none" onclick="sendViaExtension(${l._id - 1})" title="Envoyer sur LinkedIn">📤</button>
         <button class="btn btn-ghost" style="color:var(--red);font-size:12px;" onclick="deleteLead(${l._id})">✕</button>
       </td>
     </tr>`).join('');
@@ -347,3 +348,81 @@ async function deletePost(idx) {
 // ─── Init ─────────────────────────────────────────────────────────────────────
 
 loadDashboard();
+
+// ─── LinkedIn handlers ────────────────────────────────────────────────────────
+
+document.getElementById('btn-li-save-config')?.addEventListener('click', () => {
+  const clientId = document.getElementById('li-client-id').value.trim();
+  const token = document.getElementById('li-token').value.trim();
+  if (clientId) localStorage.setItem('bes_li_client_id', clientId);
+  if (token && !token.includes('***')) localStorage.setItem('bes_li_token', token);
+  if (typeof updateLinkedInUI === 'function') updateLinkedInUI();
+  toast('Configuration LinkedIn sauvegardée ✓');
+});
+
+document.getElementById('btn-li-connect')?.addEventListener('click', () => {
+  if (typeof LI !== 'undefined') LI.connect();
+  else toast('Sauvegarde ton Client ID d\'abord');
+});
+document.getElementById('btn-li-disconnect')?.addEventListener('click', () => {
+  if (typeof LI !== 'undefined') LI.disconnect();
+});
+
+document.getElementById('btn-ext-save')?.addEventListener('click', () => {
+  const id = document.getElementById('li-ext-id').value.trim();
+  if (id) { localStorage.setItem('bes_ext_id', id); toast('ID extension sauvegardé ✓'); }
+  if (typeof updateLinkedInUI === 'function') updateLinkedInUI();
+});
+
+document.getElementById('btn-li-publish')?.addEventListener('click', async () => {
+  const text = document.getElementById('li-test-post').value.trim();
+  if (!text) { toast('Entre le texte du post'); return; }
+  const btn = document.getElementById('btn-li-publish');
+  btn.innerHTML = '<span class="spinner"></span> Publication...';
+  btn.disabled = true;
+  try {
+    if (typeof LI !== 'undefined') {
+      const ok = await LI.publishPost(text);
+      if (ok) { toast('✅ Post publié sur LinkedIn !'); document.getElementById('li-test-post').value = ''; }
+    }
+  } finally {
+    btn.innerHTML = '📤 Publier sur LinkedIn';
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('btn-li-copy-post')?.addEventListener('click', () => {
+  const t = document.getElementById('li-test-post').value;
+  if (t) copyText(t);
+});
+
+function sendViaExtension(idx) {
+  const leads = JSON.parse(localStorage.getItem('bes_leads') || '[]');
+  const lead = leads[idx];
+  if (!lead) return;
+  const msg = lead.msg || lead.message || '';
+  if (typeof EXT !== 'undefined' && EXT.isAvailable()) {
+    EXT.sendMessage(lead);
+    toast('📤 Ouverture LinkedIn pour ' + lead.nom);
+  } else {
+    if (msg) copyText(msg);
+    const query = encodeURIComponent((lead.nom || '') + ' ' + (lead.ent || ''));
+    window.open('https://www.linkedin.com/search/results/people/?keywords=' + query, '_blank');
+    toast('📋 Message copié + LinkedIn ouvert');
+  }
+  lead.statut = 'envoyé';
+  leads[idx] = lead;
+  localStorage.setItem('bes_leads', JSON.stringify(leads));
+  renderPipeline();
+}
+window.sendViaExtension = sendViaExtension;
+
+function loadLinkedInConfig() {
+  const cid = localStorage.getItem('bes_li_client_id');
+  const tok = localStorage.getItem('bes_li_token');
+  const ext = localStorage.getItem('bes_ext_id');
+  if (cid && document.getElementById('li-client-id')) document.getElementById('li-client-id').value = cid;
+  if (tok && document.getElementById('li-token')) document.getElementById('li-token').placeholder = '•••• (token sauvegardé)';
+  if (ext && document.getElementById('li-ext-id')) document.getElementById('li-ext-id').value = ext;
+}
+loadLinkedInConfig();

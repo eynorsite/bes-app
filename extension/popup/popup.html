@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:320px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d0d12;color:#dde4f0;padding:0}
+.header{background:linear-gradient(135deg,#6D1FE0,#8b3cf7);padding:16px;display:flex;align-items:center;gap:10px}
+.header h1{font-size:15px;font-weight:700;color:#fff}
+.header p{font-size:11px;color:rgba(255,255,255,.75);margin-top:2px}
+.body{padding:14px}
+.section{background:#181824;border:1px solid #1f1f2e;border-radius:10px;padding:14px;margin-bottom:12px}
+.stitle{font-size:11px;font-weight:600;color:#5f6880;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.lead-item{padding:8px 0;border-bottom:1px solid #1f1f2e;cursor:pointer}
+.lead-item:last-child{border-bottom:none}
+.lead-item:hover .lead-name{color:#c4b5fd}
+.lead-name{font-size:13px;font-weight:500;color:#dde4f0;transition:color .15s}
+.lead-sub{font-size:11px;color:#5f6880;margin-top:2px}
+.tag{display:inline-block;font-size:10px;padding:2px 6px;border-radius:4px;margin-top:4px}
+.t-send{background:rgba(96,165,250,.12);color:#60a5fa;border:1px solid rgba(96,165,250,.3)}
+.t-sent{background:rgba(109,31,224,.15);color:#c4b5fd;border:1px solid rgba(109,31,224,.3)}
+.btn{display:block;width:100%;padding:9px;background:#6D1FE0;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;text-align:center;text-decoration:none;margin-bottom:8px}
+.btn:hover{background:#8b3cf7}
+.btn-s{background:#181824;border:1px solid #2b2b40;color:#dde4f0}
+.btn-s:hover{border-color:#6D1FE0;color:#c4b5fd}
+.empty{font-size:13px;color:#5f6880;text-align:center;padding:16px 0}
+.status{font-size:12px;color:#4ade80;text-align:center;padding:6px;display:none}
+#linkedin-status{font-size:11px;padding:8px;border-radius:6px;text-align:center;margin-bottom:10px}
+.li-on{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:#4ade80}
+.li-off{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);color:#f87171}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>⚡ BES</h1>
+    <p>Business Eynor Solution</p>
+  </div>
+</div>
+<div class="body">
+
+  <div id="linkedin-status" class="li-off">Détection LinkedIn...</div>
+
+  <div class="section">
+    <div class="stitle">Prospects "à envoyer"</div>
+    <div id="leads-list"><div class="empty">Chargement...</div></div>
+  </div>
+
+  <a href="https://eynorsite.github.io/bes-app/" target="_blank" class="btn">🌐 Ouvrir BES Webapp</a>
+  <button class="btn btn-s" id="btn-refresh">🔄 Rafraîchir les leads</button>
+  <div class="status" id="status-msg"></div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>

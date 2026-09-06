@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>BES — Connexion LinkedIn</title>
+<style>
+body{font-family:system-ui,sans-serif;background:#0d0d12;color:#dde4f0;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{background:#181824;border:1px solid #2b2b40;border-radius:14px;padding:32px;text-align:center;max-width:400px}
+h2{font-size:20px;font-weight:700;color:#f0f4ff;margin-bottom:8px}
+p{font-size:14px;color:#5f6880;margin-top:6px}
+.icon{font-size:40px;margin-bottom:16px}
+.ok{color:#4ade80}
+.err{color:#f87171}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="icon" id="icon">⏳</div>
+  <h2 id="title">Connexion LinkedIn...</h2>
+  <p id="sub">Traitement en cours.</p>
+</div>
+<script>
+const params = new URLSearchParams(window.location.search);
+const code = params.get('code');
+const error = params.get('error');
+
+if (error) {
+  document.getElementById('icon').textContent = '❌';
+  document.getElementById('title').textContent = 'Connexion refusée';
+  document.getElementById('sub').textContent = error;
+  document.getElementById('title').className = 'err';
+} else if (code) {
+  // Stocker le code et rediriger vers la webapp
+  localStorage.setItem('bes_li_code', code);
+  document.getElementById('icon').textContent = '✅';
+  document.getElementById('title').textContent = 'LinkedIn connecté !';
+  document.getElementById('sub').textContent = 'Redirection vers BES...';
+  document.getElementById('title').className = 'ok';
+  setTimeout(() => { window.location.href = '/bes-app/?linkedin=ok'; }, 1500);
+} else {
+  document.getElementById('icon').textContent = '⚠️';
+  document.getElementById('title').textContent = 'Paramètre manquant';
+  document.getElementById('sub').textContent = 'Relancez la connexion depuis BES.';
+}
+</script>
+</body>
+</html>
