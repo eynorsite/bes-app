@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Eynor Solution</title>
+<style>
+:root {
+  --violet: #6D1FE0;
+  --violet-light: #8b3cf7;
+  --violet-dim: rgba(109,31,224,0.12);
+  --violet-border: rgba(109,31,224,0.3);
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --card: #16161f;
+  --border: #1e1e2e;
+  --border-strong: #2a2a3e;
+  --text: #e2e8f0;
+  --text-muted: #6b7280;
+  --text-strong: #f8fafc;
+  --green: #4ade80;
+  --orange: #fb923c;
+  --red: #f87171;
+  --blue: #60a5fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+
+/* Sidebar */
+.sidebar { width: 220px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100; }
+.logo { padding: 20px 16px; border-bottom: 1px solid var(--border); }
+.logo-title { font-size: 13px; font-weight: 700; color: var(--text-strong); }
+.logo-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.logo-badge { display: inline-block; background: var(--violet-dim); border: 1px solid var(--violet-border); color: #c4b5fd; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-top: 8px; }
+nav { flex: 1; padding: 12px 8px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 7px; cursor: pointer; font-size: 13px; color: var(--text-muted); transition: all 0.15s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--card); color: var(--text); }
+.nav-item.active { background: var(--violet-dim); color: #c4b5fd; border: 1px solid var(--violet-border); }
+.nav-icon { width: 18px; text-align: center; font-size: 15px; }
+.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text-muted); }
+
+/* Main */
+.main { margin-left: 220px; flex: 1; min-height: 100vh; }
+.page { display: none; padding: 28px; }
+.page.active { display: block; }
+
+/* Page header */
+.page-header { margin-bottom: 24px; }
+.page-title { font-size: 22px; font-weight: 700; color: var(--text-strong); }
+.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+
+/* Cards */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+.card-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
+
+/* KPI grid */
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.kpi-val { font-size: 28px; font-weight: 700; color: var(--violet-light); }
+.kpi-lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+.kpi-edit { font-size: 11px; color: var(--violet); cursor: pointer; margin-top: 6px; }
+.kpi-edit:hover { text-decoration: underline; }
+
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+/* Buttons */
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--violet); color: #fff; }
+.btn-primary:hover { background: var(--violet-light); }
+.btn-secondary { background: var(--surface); border: 1px solid var(--border-strong); color: var(--text); }
+.btn-secondary:hover { border-color: var(--violet); color: #c4b5fd; }
+.btn-ghost { background: transparent; color: var(--text-muted); padding: 6px 10px; }
+.btn-ghost:hover { color: var(--text); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Forms */
+.form-group { margin-bottom: 14px; }
+.form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
+.form-input, .form-select, .form-textarea { width: 100%; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 13px; outline: none; font-family: inherit; }
+.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--violet); }
+.form-textarea { resize: vertical; min-height: 80px; }
+select option { background: var(--surface); }
+
+/* Tags / badges */
+.tag { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
+.tag-envoyer { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
+.tag-envoye { background: rgba(109,31,224,0.15); color: #c4b5fd; border: 1px solid var(--violet-border); }
+.tag-repondu { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
+.tag-relance { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
+.tag-positif { background: rgba(74,222,128,0.2); color: var(--green); border: 1px solid rgba(74,222,128,0.4); }
+.tag-negatif { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 10px 12px; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* Output box */
+.output { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; min-height: 80px; color: var(--text); position: relative; }
+.output-copy { position: absolute; top: 10px; right: 10px; font-size: 11px; background: var(--violet-dim); border: 1px solid var(--violet-border); color: #c4b5fd; padding: 4px 10px; border-radius: 5px; cursor: pointer; }
+.output-copy:hover { background: rgba(109,31,224,0.25); }
+.output-placeholder { color: var(--text-muted); font-style: italic; }
+
+/* Spinner */
+.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Post card */
+.post-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
+.post-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.post-card-meta { font-size: 11px; color: var(--text-muted); }
+.post-card-body { font-size: 13px; line-height: 1.7; white-space: pre-wrap; color: var(--text); }
+.post-card-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+
+/* Progress bar */
+.progress-bar { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 6px; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--violet) 0%, var(--violet-light) 100%); border-radius: 4px; transition: width 0.5s; }
+
+/* Alert */
+.alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+.alert-warn { background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3); color: var(--orange); }
+.alert-ok { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: var(--green); }
+
+/* Section separators */
+.sep { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+/* Plan timeline */
+.plan-month { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 3px solid var(--violet); }
+.plan-month-title { font-size: 13px; font-weight: 700; color: var(--violet-light); }
+.plan-month-ca { font-size: 24px; font-weight: 700; color: var(--text-strong); margin-top: 4px; }
+.plan-items { margin-top: 10px; }
+.plan-item { font-size: 12px; color: var(--text); padding: 4px 0; display: flex; gap: 8px; }
+.plan-item::before { content: "→"; color: var(--violet); flex-shrink: 0; }
+
+/* Toast */
+#toast { position: fixed; bottom: 24px; right: 24px; background: var(--card); border: 1px solid var(--violet-border); color: #c4b5fd; padding: 12px 20px; border-radius: 8px; font-size: 13px; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 999; }
+#toast.show { transform: translateY(0); opacity: 1; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: none; align-items: center; justify-content: center; }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--card); border: 1px solid var(--border-strong); border-radius: 14px; padding: 24px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
+.modal-title { font-size: 16px; font-weight: 700; color: var(--text-strong); margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .sidebar .logo-title, .sidebar .logo-sub, .sidebar .logo-badge, .nav-item span:last-child, .sidebar-footer { display: none; }
+  .main { margin-left: 60px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-title">⚡ BES</div>
+    <div class="logo-sub">Business Eynor Solution</div>
+    <div class="logo-badge">EYNOR Formation</div>
+  </div>
+  <nav>
+    <button class="nav-item active" data-page="dashboard">
+      <span class="nav-icon">📊</span><span>Tableau de bord</span>
+    </button>
+    <button class="nav-item" data-page="prospection">
+      <span class="nav-icon">📬</span><span>Prospection</span>
+    </button>
+    <button class="nav-item" data-page="pipeline">
+      <span class="nav-icon">🗂️</span><span>Pipeline leads</span>
+    </button>
+    <button class="nav-item" data-page="posts">
+      <span class="nav-icon">✍️</span><span>Posts LinkedIn</span>
+    </button>
+    <button class="nav-item" data-page="strategie">
+      <span class="nav-icon">🎯</span><span>Stratégie</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">v1.0 · 06/09/2026</div>
+</aside>
+
+<main class="main">
+
+  <!-- DASHBOARD -->
+  <div class="page active" id="page-dashboard">
+    <div class="page-header">
+      <div class="page-title">Tableau de bord</div>
+      <div class="page-sub" id="dash-mois">Chargement...</div>
+    </div>
+    
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card"><div class="kpi-val" id="k-ca">-</div><div class="kpi-lbl">CA signé (€)</div><div class="kpi-edit" data-kpi="ca">Modifier</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="k-formations">-</div><div class="kpi-lbl">Formations signées</div><div class="kpi-edit" data-kpi="formations">Modifier</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="k-devis">-</div><div class="kpi-lbl">Devis envoyés</div><div class="kpi-edit" data-kpi="devis">Modifier</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="k-prospects">-</div><div class="kpi-lbl">Prospects contactés</div><div class="kpi-edit" data-kpi="prospects">Modifier</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="k-reponses">-</div><div class="kpi-lbl">Réponses reçues</div><div class="kpi-edit" data-kpi="reponses">Modifier</div></div>
+      <div class="kpi-card"><div class="kpi-val" id="k-posts">-</div><div class="kpi-lbl">Posts LinkedIn</div><div class="kpi-edit" data-kpi="posts">Modifier</div></div>
+    </div>
+    
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">Objectif décembre 2026</div>
+        <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">CA mensuel cible</div>
+        <div style="font-size:28px;font-weight:700;color:var(--text-strong);">15 000 – 20 000 €</div>
+        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Progression</div>
+        <div class="progress-bar"><div class="progress-fill" id="dash-progress" style="width:0%"></div></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="dash-progress-label">0 % de l'objectif septembre</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Actions prioritaires</div>
+        <div style="font-size:13px;line-height:1.8;color:var(--text);">
+          <div>→ Publier <strong style="color:#c4b5fd;">3 posts LinkedIn</strong> cette semaine</div>
+          <div>→ Contacter <strong style="color:#c4b5fd;">10 nouveaux prospects</strong></div>
+          <div>→ Relancer les <span id="dash-relances">—</span> en attente J4</div>
+          <div>→ Envoyer les devis en cours</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Derniers prospects</div>
+      <div class="table-wrap">
+        <table id="dash-leads-table">
+          <thead><tr><th>Nom</th><th>Entreprise</th><th>Poste</th><th>Canal</th><th>Statut</th><th>Date</th></tr></thead>
+          <tbody id="dash-leads-body"><tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:20px;">Aucun prospect. Allez dans Prospection pour en créer.</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROSPECTION -->
+  <div class="page" id="page-prospection">
+    <div class="page-header">
+      <div class="page-title">Prospection</div>
+      <div class="page-sub">Générez un message personnalisé par Claude pour chaque prospect</div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="card" style="margin-bottom:16px;">
+          <div class="card-title">Profil du prospect</div>
+          <div class="form-group">
+            <label class="form-label">Prénom + Nom *</label>
+            <input class="form-input" id="p-nom" placeholder="ex: Sophie Martin">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Entreprise *</label>
+            <input class="form-input" id="p-entreprise" placeholder="ex: BTP Leleu, Mérignac">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Poste</label>
+            <input class="form-input" id="p-poste" placeholder="ex: Responsable RH">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Canal</label>
+            <select class="form-select" id="p-canal">
+              <option value="LinkedIn">LinkedIn</option>
+              <option value="Email">Email</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Signal d'entrée (ce que vous avez vu)</label>
+            <textarea class="form-textarea" id="p-signal" placeholder="ex: Offre d'emploi technicien électricien postée hier. OU Post sur un accident chantier. OU Commentaire sur habilitation électrique."></textarea>
+          </div>
+          <button class="btn btn-primary" id="btn-generate-prospect" style="width:100%;">
+            <span>⚡</span> Générer les messages
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-title">Message LinkedIn (≤ 200 car.)</div>
+          <div class="output" id="out-linkedin"><span class="output-placeholder">Le message apparaîtra ici...</span></div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="count-linkedin"></div>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-title">Email J0</div>
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Objet : <span id="out-objet" style="color:var(--text);">—</span></div>
+          <div class="output" id="out-email-j0"><span class="output-placeholder">L'email apparaîtra ici...</span></div>
+        </div>
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-title">Relance J4</div>
+          <div class="output" id="out-email-j4"><span class="output-placeholder">La relance J4 apparaîtra ici...</span></div>
+        </div>
+        <button class="btn btn-secondary" id="btn-save-lead" style="width:100%;" disabled>
+          💾 Ajouter au pipeline
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="page" id="page-pipeline">
+    <div class="page-header">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="page-title">Pipeline leads</div>
+          <div class="page-sub">Tous vos prospects et leur statut</div>
+        </div>
+        <button class="btn btn-primary" id="btn-add-lead-manual">+ Ajouter manuellement</button>
+      </div>
+    </div>
+    <div class="card">
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;" id="pipeline-filters">
+        <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" data-filter="all">Tous</button>
+        <button class="btn btn-ghost" style="font-size:12px;" data-filter="à envoyer">À envoyer</button>
+        <button class="btn btn-ghost" style="font-size:12px;" data-filter="envoyé">Envoyé</button>
+        <button class="btn btn-ghost" style="font-size:12px;" data-filter="répondu">Répondu</button>
+        <button class="btn btn-ghost" style="font-size:12px;" data-filter="relance J4">Relance J4</button>
+        <button class="btn btn-ghost" style="font-size:12px;" data-filter="fermé positif">Positif ✓</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Nom</th><th>Entreprise</th><th>Poste</th><th>Canal</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+          <tbody id="pipeline-body"><tr><td colspan="7" style="color:var(--text-muted);text-align:center;padding:24px;">Chargement...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- POSTS LINKEDIN -->
+  <div class="page" id="page-posts">
+    <div class="page-header">
+      <div class="page-title">Posts LinkedIn</div>
+      <div class="page-sub">Générez et gérez vos posts avec Claude</div>
+    </div>
+    
+    <div class="grid-2" style="margin-bottom:20px;">
+      <div class="card">
+        <div class="card-title">Nouveau post</div>
+        <div class="form-group">
+          <label class="form-label">Angle</label>
+          <select class="form-select" id="post-angle">
+            <option value="reglementaire">Réglementaire — obligation employeur, risque pénal</option>
+            <option value="ve">VE / NF C 18-550 — bornes, flotte électrique</option>
+            <option value="reactivite">Réactivité — devis 24h, disponibilité intra</option>
+            <option value="preuve">Preuve sociale — témoignage, résultat concret</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ICP ciblé</label>
+          <select class="form-select" id="post-icp">
+            <option value="DRH PME Gironde">DRH PME Gironde (Sandrine)</option>
+            <option value="Responsable technique / chef d'atelier">Responsable technique / chef d'atelier (Rémi)</option>
+            <option value="Gestionnaire de flotte VE">Gestionnaire de flotte VE (Élodie)</option>
+            <option value="Responsable QHSE ETI">Responsable QHSE ETI (Nicolas)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contexte ou idée (optionnel)</label>
+          <textarea class="form-textarea" id="post-detail" placeholder="ex: On vient de faire une journée intra chez une PME à Mérignac, 6 techniciens habilités en une journée..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="btn-gen-post" style="width:100%;">
+          <span>✍️</span> Générer le post
+        </button>
+      </div>
+      <div class="card">
+        <div class="card-title">Aperçu du post généré</div>
+        <div class="output" id="out-post" style="min-height:200px;"><span class="output-placeholder">Le post apparaîtra ici...</span></div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button class="btn btn-secondary" id="btn-copy-post" style="flex:1;">📋 Copier</button>
+          <button class="btn btn-ghost" id="btn-regen-post">🔄 Régénérer</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Posts générés <span id="posts-count" style="color:var(--text-muted);font-weight:400;"></span></div>
+      <div id="posts-list">
+        <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:24px;">Aucun post généré pour l'instant.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STRATEGIE -->
+  <div class="page" id="page-strategie">
+    <div class="page-header">
+      <div class="page-title">Stratégie</div>
+      <div class="page-sub">Positionnement retenu et plan 90 jours — sept. à déc. 2026</div>
+    </div>
+
+    <div class="alert alert-ok" style="margin-bottom:20px;">
+      ⚡ <strong>EYNOR Formation</strong> — seul organisme Qualiopi en Gironde qui répond en 24h, se déplace chez vous et maîtrise les habilitations pour véhicules électriques.
+    </div>
+
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="plan-month">
+        <div class="plan-month-title">Septembre — Ancrer</div>
+        <div class="plan-month-ca">3 – 5k€</div>
+        <div style="font-size:11px;color:var(--text-muted);">1 formation signée</div>
+        <div class="plan-items">
+          <div class="plan-item">3 posts/semaine LinkedIn</div>
+          <div class="plan-item">Page pilier SEO eynor.fr</div>
+          <div class="plan-item">Séquence email bienvenue</div>
+          <div class="plan-item">Badge "devis 24h" visible</div>
+        </div>
+      </div>
+      <div class="plan-month">
+        <div class="plan-month-title">Octobre — Convertir</div>
+        <div class="plan-month-ca">6 – 9k€</div>
+        <div style="font-size:11px;color:var(--text-muted);">3 formations signées</div>
+        <div class="plan-items">
+          <div class="plan-item">Outbound 10 prospects/sem.</div>
+          <div class="plan-item">Séquence J0/J4/J12 active</div>
+          <div class="plan-item">1er OF partenaire activé</div>
+          <div class="plan-item">1 article SEO publié</div>
+        </div>
+      </div>
+      <div class="plan-month">
+        <div class="plan-month-title">Nov–Déc — Accélérer</div>
+        <div class="plan-month-ca">15 – 20k€</div>
+        <div style="font-size:11px;color:var(--text-muted);">6+ formations/mois</div>
+        <div class="plan-items">
+          <div class="plan-item">Campagne recyclage triennal</div>
+          <div class="plan-item">2 OF partenaires/mois</div>
+          <div class="plan-item">1 contenu SEO/mois</div>
+          <div class="plan-item">1 témoignage client/mois</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">5 ICP prioritaires</div>
+        <div style="font-size:13px;line-height:2;color:var(--text);">
+          <div>👩 <strong style="color:#c4b5fd;">Sandrine</strong> — DRH PME industrie/BTP, Gironde</div>
+          <div>👨 <strong style="color:#c4b5fd;">Nicolas</strong> — Responsable QHSE ETI, NAq</div>
+          <div>🔧 <strong style="color:#c4b5fd;">Rémi</strong> — Responsable technique / chef d'atelier</div>
+          <div>🔋 <strong style="color:#c4b5fd;">Élodie</strong> — Gestionnaire de flotte VE</div>
+          <div>🤝 <strong style="color:#c4b5fd;">Thomas</strong> — OF partenaire hors Gironde</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Ce qu'on NE dit pas</div>
+        <div style="font-size:13px;line-height:2;color:var(--text-muted);">
+          <div>✗ "Nous sommes les moins chers"</div>
+          <div>✗ "Solutions", "accompagnement"</div>
+          <div>✗ "Passion" ou "vocation"</div>
+          <div>✗ "N'hésitez pas à nous contacter"</div>
+          <div>✗ Proposition de RDV au 1er contact</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- Modal ajout manuel -->
+<div class="modal-overlay" id="modal-add-lead">
+  <div class="modal">
+    <div class="modal-title">Ajouter un prospect</div>
+    <div class="form-group"><label class="form-label">Nom *</label><input class="form-input" id="m-nom" placeholder="Prénom Nom"></div>
+    <div class="form-group"><label class="form-label">Entreprise *</label><input class="form-input" id="m-entreprise"></div>
+    <div class="form-group"><label class="form-label">Poste</label><input class="form-input" id="m-poste"></div>
+    <div class="form-group"><label class="form-label">Canal</label><select class="form-select" id="m-canal"><option>LinkedIn</option><option>Email</option></select></div>
+    <div class="form-group"><label class="form-label">Statut</label>
+      <select class="form-select" id="m-statut">
+        <option value="à envoyer">À envoyer</option>
+        <option value="envoyé">Envoyé</option>
+        <option value="répondu">Répondu</option>
+        <option value="relance J4">Relance J4</option>
+        <option value="relance J12">Relance J12</option>
+        <option value="fermé positif">Fermé positif</option>
+        <option value="fermé négatif">Fermé négatif</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-modal-cancel">Annuler</button>
+      <button class="btn btn-primary" id="btn-modal-save">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- KPI edit modal -->
+<div class="modal-overlay" id="modal-kpi">
+  <div class="modal">
+    <div class="modal-title">Modifier le KPI</div>
+    <input type="hidden" id="kpi-key">
+    <div class="form-group"><label class="form-label">Valeur</label><input class="form-input" id="kpi-val" type="number" min="0"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="btn-kpi-cancel">Annuler</button>
+      <button class="btn btn-primary" id="btn-kpi-save">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="app.js?v=1"></script>
+</body>
+</html>
