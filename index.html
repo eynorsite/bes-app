@@ -5,160 +5,205 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Business Eynor Solution</title>
 <style>
-:root {
-  --violet: #6D1FE0;
-  --violet-light: #8b3cf7;
-  --violet-dim: rgba(109,31,224,0.12);
-  --violet-border: rgba(109,31,224,0.3);
-  --bg: #0a0a0f;
-  --surface: #111118;
-  --card: #16161f;
-  --border: #1e1e2e;
-  --border-strong: #2a2a3e;
-  --text: #e2e8f0;
-  --text-muted: #6b7280;
-  --text-strong: #f8fafc;
-  --green: #4ade80;
-  --orange: #fb923c;
-  --red: #f87171;
-  --blue: #60a5fa;
+:root{
+  --bg:#f5f5f7;--surf:#fff;--card:#fff;
+  --brd:#e5e7eb;--brdS:#d1d5db;
+  --tx:#111827;--txm:#6b7280;--txs:#374151;
+  --v:#6D1FE0;--vl:#8b3cf7;--vd:rgba(109,31,224,.08);--vb:rgba(109,31,224,.2);
+  --grn:#16a34a;--grnd:rgba(22,163,74,.1);--grnb:rgba(22,163,74,.25);
+  --blu:#2563eb;--org:#ea580c;--red:#dc2626;
+  --sidebar:240px;
 }
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex}
 
-/* Sidebar */
-.sidebar { width: 220px; min-height: 100vh; background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; z-index: 100; }
-.logo { padding: 20px 16px; border-bottom: 1px solid var(--border); }
-.logo-title { font-size: 13px; font-weight: 700; color: var(--text-strong); }
-.logo-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-.logo-badge { display: inline-block; background: var(--violet-dim); border: 1px solid var(--violet-border); color: #c4b5fd; font-size: 10px; padding: 2px 8px; border-radius: 20px; margin-top: 8px; }
-nav { flex: 1; padding: 12px 8px; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: 7px; cursor: pointer; font-size: 13px; color: var(--text-muted); transition: all 0.15s; margin-bottom: 2px; border: none; background: none; width: 100%; text-align: left; }
-.nav-item:hover { background: var(--card); color: var(--text); }
-.nav-item.active { background: var(--violet-dim); color: #c4b5fd; border: 1px solid var(--violet-border); }
-.nav-icon { width: 18px; text-align: center; font-size: 15px; }
-.sidebar-footer { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 10px; color: var(--text-muted); }
+/* ── Sidebar ── */
+.sidebar{width:var(--sidebar);min-height:100vh;background:var(--surf);border-right:1px solid var(--brd);display:flex;flex-direction:column;position:fixed;top:0;left:0;z-index:50}
+.logo{display:flex;align-items:center;gap:10px;padding:20px 18px;border-bottom:1px solid var(--brd)}
+.logo-icon{width:32px;height:32px;background:var(--v);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;flex-shrink:0}
+.logo-name{font-size:15px;font-weight:700;color:var(--tx)}
+nav{flex:1;padding:12px 10px;overflow-y:auto}
+.nav-section{font-size:11px;font-weight:600;color:var(--txm);text-transform:uppercase;letter-spacing:.6px;padding:8px 8px 4px}
+.nav-btn{display:flex;align-items:center;gap:9px;width:100%;padding:8px 10px;border:none;background:transparent;color:var(--txm);font-size:13px;border-radius:7px;cursor:pointer;margin-bottom:1px;text-align:left;transition:all .12s;font-family:inherit}
+.nav-btn:hover{background:#f3f4f6;color:var(--tx)}
+.nav-btn.active{background:var(--vd);color:var(--v);font-weight:500}
+.nav-icon{width:16px;text-align:center;font-size:14px;opacity:.7}
+.nav-btn.active .nav-icon{opacity:1}
+.nav-badge{margin-left:auto;background:#111;color:#fff;font-size:10px;padding:1px 6px;border-radius:10px;min-width:20px;text-align:center}
+.sidebar-user{padding:14px 18px;border-top:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.avatar{width:32px;height:32px;background:var(--v);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:600;flex-shrink:0}
+.user-name{font-size:13px;font-weight:500;color:var(--tx)}
+.user-sub{font-size:11px;color:var(--txm)}
 
-/* Main */
-.main { margin-left: 220px; flex: 1; min-height: 100vh; }
-.page { display: none; padding: 28px; }
-.page.active { display: block; }
+/* ── Main ── */
+.main{margin-left:var(--sidebar);flex:1;min-height:100vh}
+.page{display:none;padding:28px 32px;max-width:1100px}
+.page.on{display:block}
 
-/* Page header */
-.page-header { margin-bottom: 24px; }
-.page-title { font-size: 22px; font-weight: 700; color: var(--text-strong); }
-.page-sub { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+/* ── Page header ── */
+.date-lbl{font-size:12px;color:var(--txm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.page-greeting{font-size:26px;font-weight:700;color:var(--tx);margin-bottom:3px}
+.page-sub{font-size:13px;color:var(--txm);margin-bottom:20px}
 
-/* Cards */
-.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
-.card-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 16px; }
+/* ── Tabs (filtre période) ── */
+.period-bar{display:flex;align-items:center;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.period-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--brd);background:var(--surf);color:var(--txm);cursor:pointer;transition:all .12s}
+.period-btn.active{background:var(--tx);color:#fff;border-color:var(--tx)}
+.period-btn:hover:not(.active){background:#f3f4f6}
+.pill-btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1px solid var(--brd);background:var(--surf);color:var(--txm);cursor:pointer;display:flex;align-items:center;gap:6px}
+.pill-btn:hover{background:#f3f4f6}
 
-/* KPI grid */
-.kpi-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
-.kpi-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
-.kpi-val { font-size: 28px; font-weight: 700; color: var(--violet-light); }
-.kpi-lbl { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
-.kpi-edit { font-size: 11px; color: var(--violet); cursor: pointer; margin-top: 6px; }
-.kpi-edit:hover { text-decoration: underline; }
+/* ── KPI grid ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px}
+.kpi-label{font-size:12px;color:var(--txm);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.kpi-val{font-size:30px;font-weight:700;color:var(--tx);margin-bottom:4px}
+.kpi-sub{font-size:11px;color:var(--txm)}
+.kpi-mini-chart{height:40px;margin-top:10px;position:relative;overflow:hidden}
+.kpi-mini-chart canvas{width:100%;height:100%}
+.badge-pct{display:inline-block;font-size:11px;padding:2px 7px;border-radius:20px;background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
 
-/* Grid layouts */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+/* ── 2-col layout ── */
+.g2{display:grid;grid-template-columns:1fr 340px;gap:16px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g22{display:grid;grid-template-columns:1fr 1fr;gap:14px}
 
-/* Buttons */
-.btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; transition: all 0.15s; }
-.btn-primary { background: var(--violet); color: #fff; }
-.btn-primary:hover { background: var(--violet-light); }
-.btn-secondary { background: var(--surface); border: 1px solid var(--border-strong); color: var(--text); }
-.btn-secondary:hover { border-color: var(--violet); color: #c4b5fd; }
-.btn-ghost { background: transparent; color: var(--text-muted); padding: 6px 10px; }
-.btn-ghost:hover { color: var(--text); }
-.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* ── Cards ── */
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px;margin-bottom:14px}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.card-title{font-size:13px;font-weight:600;color:var(--tx)}
+.card-sub{font-size:11px;color:var(--txm)}
 
-/* Forms */
-.form-group { margin-bottom: 14px; }
-.form-label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
-.form-input, .form-select, .form-textarea { width: 100%; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 8px; padding: 9px 12px; color: var(--text); font-size: 13px; outline: none; font-family: inherit; }
-.form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--violet); }
-.form-textarea { resize: vertical; min-height: 80px; }
-select option { background: var(--surface); }
+/* ── À faire list ── */
+.todo-card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;overflow:hidden}
+.todo-head{padding:14px 18px;border-bottom:1px solid var(--brd);display:flex;align-items:center;justify-content:space-between}
+.todo-title{font-size:13px;font-weight:600;color:var(--tx)}
+.todo-count{background:var(--tx);color:#fff;font-size:11px;padding:1px 7px;border-radius:10px}
+.todo-item{display:flex;align-items:center;gap:10px;padding:11px 18px;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background .1s}
+.todo-item:last-child{border-bottom:none}
+.todo-item:hover{background:#fafafa}
+.todo-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;color:#fff}
+.todo-name{font-size:13px;font-weight:500;color:var(--tx);flex:1}
+.todo-action{font-size:11px;color:var(--v);font-weight:500}
+.todo-more{padding:11px 18px;font-size:12px;color:var(--txm);text-align:center;border-top:1px solid var(--brd);cursor:pointer}
+.todo-more:hover{color:var(--v)}
 
-/* Tags / badges */
-.tag { display: inline-block; font-size: 11px; padding: 3px 8px; border-radius: 4px; }
-.tag-envoyer { background: rgba(96,165,250,0.15); color: var(--blue); border: 1px solid rgba(96,165,250,0.3); }
-.tag-envoye { background: rgba(109,31,224,0.15); color: #c4b5fd; border: 1px solid var(--violet-border); }
-.tag-repondu { background: rgba(74,222,128,0.15); color: var(--green); border: 1px solid rgba(74,222,128,0.3); }
-.tag-relance { background: rgba(251,146,60,0.15); color: var(--orange); border: 1px solid rgba(251,146,60,0.3); }
-.tag-positif { background: rgba(74,222,128,0.2); color: var(--green); border: 1px solid rgba(74,222,128,0.4); }
-.tag-negatif { background: rgba(248,113,113,0.15); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+/* ── Activité bar chart ── */
+.activity-card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:18px}
+.activity-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.activity-val{font-size:28px;font-weight:700;color:var(--tx);margin-bottom:12px}
+.chart-wrap{height:100px;display:flex;align-items:flex-end;gap:4px}
+.bar{flex:1;border-radius:4px 4px 0 0;min-height:4px;transition:height .3s}
+.bar.inv{background:#111}
+.bar.msg{background:#d1d5db}
+.chart-legend{display:flex;gap:14px;margin-top:10px}
+.leg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txm)}
+.leg-dot{width:8px;height:8px;border-radius:2px}
 
-/* Table */
-.table-wrap { overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: left; padding: 10px 12px; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
-td { padding: 11px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
-tr:last-child td { border-bottom: none; }
-tr:hover td { background: rgba(255,255,255,0.02); }
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .12s;font-family:inherit}
+.btn-p{background:var(--tx);color:#fff}.btn-p:hover{background:#1f2937}
+.btn-v{background:var(--v);color:#fff}.btn-v:hover{background:var(--vl)}
+.btn-s{background:var(--surf);border:1px solid var(--brd);color:var(--tx)}.btn-s:hover{background:#f3f4f6}
+.btn-g{background:transparent;color:var(--txm);padding:6px 10px}.btn-g:hover{color:var(--tx)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-full{width:100%;justify-content:center}
 
-/* Output box */
-.output { background: var(--surface); border: 1px solid var(--border-strong); border-radius: 10px; padding: 16px; font-size: 13px; line-height: 1.7; white-space: pre-wrap; min-height: 80px; color: var(--text); position: relative; }
-.output-copy { position: absolute; top: 10px; right: 10px; font-size: 11px; background: var(--violet-dim); border: 1px solid var(--violet-border); color: #c4b5fd; padding: 4px 10px; border-radius: 5px; cursor: pointer; }
-.output-copy:hover { background: rgba(109,31,224,0.25); }
-.output-placeholder { color: var(--text-muted); font-style: italic; }
+/* ── Forms ── */
+.fg{margin-bottom:12px}
+.flbl{display:block;font-size:12px;color:var(--txm);margin-bottom:5px;font-weight:500}
+.fi,.fs,.fta{width:100%;background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:8px 11px;color:var(--tx);font-size:13px;outline:none;font-family:inherit;transition:border-color .12s}
+.fi:focus,.fs:focus,.fta:focus{border-color:var(--v);box-shadow:0 0 0 3px var(--vd)}
+.fta{resize:vertical;min-height:70px}
+select option{background:var(--surf)}
 
-/* Spinner */
-.spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
+/* ── Tags ── */
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:5px;font-weight:500}
+.t-send{background:#eff6ff;color:var(--blu);border:1px solid #bfdbfe}
+.t-sent{background:var(--vd);color:var(--v);border:1px solid var(--vb)}
+.t-rep{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
+.t-rel{background:#fff7ed;color:var(--org);border:1px solid #fed7aa}
+.t-pos{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
+.t-neg{background:#fef2f2;color:var(--red);border:1px solid #fecaca}
+.t-analyse{background:var(--grnd);color:var(--grn);border:1px solid var(--grnb)}
 
-/* LinkedIn badges */
-.li-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px}
-.li-ok{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);color:var(--green)}
-.li-off{background:var(--border);border:1px solid var(--border-strong);color:var(--text-muted)}
+/* ── Section tabs ── */
+.stabs{display:flex;gap:2px;background:#f3f4f6;border-radius:10px;padding:3px;width:fit-content;margin-bottom:20px}
+.stab{padding:7px 16px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--txm);transition:all .12s;font-family:inherit}
+.stab.active{background:var(--surf);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+.stab:hover:not(.active){color:var(--tx)}
 
-/* Post card */
-.post-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 12px; }
-.post-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-.post-card-meta { font-size: 11px; color: var(--text-muted); }
-.post-card-body { font-size: 13px; line-height: 1.7; white-space: pre-wrap; color: var(--text); }
-.post-card-actions { display: flex; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+/* ── Studio cards ── */
+.studio-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.studio-card{background:var(--surf);border:1px solid var(--brd);border-radius:12px;padding:16px}
+.sc-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.sc-name{font-size:14px;font-weight:600;color:var(--tx)}
+.sc-sub{font-size:12px;color:var(--v);cursor:pointer;margin-bottom:12px}
+.sc-sub:hover{text-decoration:underline}
+.sc-section{background:#f9fafb;border:1px solid var(--brd);border-radius:8px;margin-bottom:8px;overflow:hidden}
+.sc-section-head{display:flex;align-items:center;gap:8px;padding:9px 12px;cursor:pointer;font-size:12px;font-weight:500;color:var(--tx)}
+.sc-section-head:hover{background:#f3f4f6}
+.sc-section-icon{color:var(--v);font-size:13px}
+.sc-chevron{margin-left:auto;color:var(--txm);font-size:11px;transition:transform .2s}
+.sc-section.open .sc-chevron{transform:rotate(180deg)}
+.sc-section-body{padding:10px 12px;font-size:12px;color:var(--txm);border-top:1px solid var(--brd);line-height:1.6;display:none}
+.sc-section.open .sc-section-body{display:block}
+.sc-examples{padding:6px 12px 12px}
+.sc-example{background:var(--surf);border:1px solid var(--brd);border-radius:6px;padding:8px;font-size:12px;color:var(--txs);margin-bottom:6px;cursor:pointer;transition:border-color .12s}
+.sc-example:hover{border-color:var(--v)}
+.sc-del{color:var(--txm);font-size:16px;cursor:pointer;padding:4px;border-radius:5px;border:none;background:transparent;transition:color .12s}
+.sc-del:hover{color:var(--red)}
 
-/* Progress bar */
-.progress-bar { background: var(--border); border-radius: 4px; height: 6px; overflow: hidden; margin-top: 6px; }
-.progress-fill { height: 100%; background: linear-gradient(90deg, var(--violet) 0%, var(--violet-light) 100%); border-radius: 4px; transition: width 0.5s; }
+/* ── Prospection output ── */
+.output{background:#f9fafb;border:1px solid var(--brd);border-radius:10px;padding:14px;font-size:13px;line-height:1.75;white-space:pre-wrap;min-height:70px;color:var(--tx);position:relative}
+.out-ph{color:var(--txm);font-style:italic}
+.copy-btn{position:absolute;top:8px;right:8px;font-size:11px;background:var(--surf);border:1px solid var(--brd);color:var(--txm);padding:3px 9px;border-radius:5px;cursor:pointer}
+.copy-btn:hover{border-color:var(--v);color:var(--v)}
 
-/* Alert */
-.alert { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
-.alert-warn { background: rgba(251,146,60,0.1); border: 1px solid rgba(251,146,60,0.3); color: var(--orange); }
-.alert-ok { background: rgba(74,222,128,0.1); border: 1px solid rgba(74,222,128,0.3); color: var(--green); }
+/* ── Table ── */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:9px 12px;font-size:11px;color:var(--txm);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--brd);background:#f9fafb}
+td{padding:11px 12px;border-bottom:1px solid #f3f4f6;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
 
-/* Section separators */
-.sep { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+/* ── Pipeline action btn ── */
+.pipe-li-btn{background:#0077b5;color:#fff;border:none;border-radius:6px;padding:4px 8px;font-size:11px;cursor:pointer;transition:opacity .12s}
+.pipe-li-btn:hover{opacity:.85}
 
-/* Plan timeline */
-.plan-month { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 3px solid var(--violet); }
-.plan-month-title { font-size: 13px; font-weight: 700; color: var(--violet-light); }
-.plan-month-ca { font-size: 24px; font-weight: 700; color: var(--text-strong); margin-top: 4px; }
-.plan-items { margin-top: 10px; }
-.plan-item { font-size: 12px; color: var(--text); padding: 4px 0; display: flex; gap: 8px; }
-.plan-item::before { content: "→"; color: var(--violet); flex-shrink: 0; }
+/* ── Toast ── */
+#toast{position:fixed;bottom:20px;right:20px;background:#111;color:#fff;padding:10px 18px;border-radius:9px;font-size:13px;transform:translateY(60px);opacity:0;transition:all .25s;z-index:999;max-width:320px}
+#toast.on{transform:translateY(0);opacity:1}
 
-/* Toast */
-#toast { position: fixed; bottom: 24px; right: 24px; background: var(--card); border: 1px solid var(--violet-border); color: #c4b5fd; padding: 12px 20px; border-radius: 8px; font-size: 13px; transform: translateY(100px); opacity: 0; transition: all 0.3s; z-index: 999; }
-#toast.show { transform: translateY(0); opacity: 1; }
+/* ── Modal ── */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;display:none;align-items:center;justify-content:center}
+.mo.on{display:flex}
+.mbox{background:var(--surf);border:1px solid var(--brd);border-radius:14px;padding:24px;width:100%;max-width:460px;box-shadow:0 20px 60px rgba(0,0,0,.15)}
+.mtitle{font-size:16px;font-weight:700;color:var(--tx);margin-bottom:16px}
+.mact{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
 
-/* Modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 500; display: none; align-items: center; justify-content: center; }
-.modal-overlay.open { display: flex; }
-.modal { background: var(--card); border: 1px solid var(--border-strong); border-radius: 14px; padding: 24px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
-.modal-title { font-size: 16px; font-weight: 700; color: var(--text-strong); margin-bottom: 16px; }
-.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+/* ── LinkedIn badges ── */
+.li-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;padding:4px 10px;border-radius:20px;border:1px solid}
+.li-ok{background:var(--grnd);border-color:var(--grnb);color:var(--grn)}
+.li-off{background:#f3f4f6;border-color:var(--brd);color:var(--txm)}
 
-@media (max-width: 768px) {
-  .sidebar { width: 60px; }
-  .sidebar .logo-title, .sidebar .logo-sub, .sidebar .logo-badge, .nav-item span:last-child, .sidebar-footer { display: none; }
-  .main { margin-left: 60px; }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+/* ── Spinner ── */
+.sp{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Prompt area ── */
+.prompt-box{background:#f0f4ff;border:1px solid #c7d7fd;border-radius:10px;padding:14px;margin-top:12px;display:none}
+.prompt-box.on{display:block}
+.prompt-box p{font-size:12px;color:#3b4e8c;margin-bottom:8px}
+.prompt-txt{font-size:12px;color:#1e3a8a;line-height:1.6;white-space:pre-wrap}
+
+@media(max-width:768px){
+  :root{--sidebar:52px}
+  .logo-name,.nav-btn span:last-child,.nav-section,.sidebar-user .user-name,.sidebar-user .user-sub{display:none}
+  .main{padding:16px}
+  .kpi-grid,.g2,.g3,.g22{grid-template-columns:1fr}
+  .page{padding:16px}
 }
 </style>
 </head>
@@ -166,425 +211,461 @@ tr:hover td { background: rgba(255,255,255,0.02); }
 
 <aside class="sidebar">
   <div class="logo">
-    <div class="logo-title">⚡ BES</div>
-    <div class="logo-sub">Business Eynor Solution</div>
-    <div class="logo-badge">EYNOR Formation</div>
+    <div class="logo-icon">E</div>
+    <div class="logo-name">EYNOR BES</div>
   </div>
   <nav>
-    <button class="nav-item active" data-page="dashboard">
-      <span class="nav-icon">📊</span><span>Tableau de bord</span>
-    </button>
-    <button class="nav-item" data-page="prospection">
-      <span class="nav-icon">📬</span><span>Prospection</span>
-    </button>
-    <button class="nav-item" data-page="pipeline">
-      <span class="nav-icon">🗂️</span><span>Pipeline leads</span>
-    </button>
-    <button class="nav-item" data-page="posts">
-      <span class="nav-icon">✍️</span><span>Posts LinkedIn</span>
-    </button>
-    <button class="nav-item" data-page="strategie">
-      <span class="nav-icon">🎯</span><span>Stratégie</span>
-    </button>
-    <button class="nav-item" data-page="linkedin">
-      <span class="nav-icon">🔗</span><span>LinkedIn</span>
-    </button>
+    <button class="nav-btn active" data-p="dash"><span class="nav-icon">⊞</span><span>Tableau de bord</span></button>
+    <button class="nav-btn" data-p="flow"><span class="nav-icon">⚡</span><span>Flow</span></button>
+
+    <div class="nav-section">Prospection</div>
+    <button class="nav-btn" data-p="prosp"><span class="nav-icon">🎯</span><span>Moteur d'acquisition</span></button>
+    <button class="nav-btn" data-p="pipe"><span class="nav-icon">👥</span><span>CRM</span></button>
+    <button class="nav-btn" data-p="camp"><span class="nav-icon">📣</span><span>Campagnes</span></button>
+
+    <div class="nav-section">Content</div>
+    <button class="nav-btn" data-p="posts"><span class="nav-icon">📝</span><span>Posts</span></button>
+    <button class="nav-btn" data-p="studio"><span class="nav-icon">🎨</span><span>Studio</span></button>
+
+    <div class="nav-section">Paramètres</div>
+    <button class="nav-btn" data-p="linkedin"><span class="nav-icon">🔗</span><span>LinkedIn</span></button>
   </nav>
-  <div class="sidebar-footer">v1.0 · 06/09/2026</div>
+  <div class="sidebar-user">
+    <div class="avatar">U</div>
+    <div>
+      <div class="user-name">CALMO Ulrich</div>
+      <div class="user-sub">EYNOR Formation</div>
+    </div>
+  </div>
 </aside>
 
 <main class="main">
 
-  <!-- DASHBOARD -->
-  <div class="page active" id="page-dashboard">
-    <div class="page-header">
-      <div class="page-title">Tableau de bord</div>
-      <div class="page-sub" id="dash-mois">Chargement...</div>
-    </div>
-    
-    <div class="kpi-grid" id="kpi-grid">
-      <div class="kpi-card"><div class="kpi-val" id="k-ca">-</div><div class="kpi-lbl">CA signé (€)</div><div class="kpi-edit" data-kpi="ca">Modifier</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="k-formations">-</div><div class="kpi-lbl">Formations signées</div><div class="kpi-edit" data-kpi="formations">Modifier</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="k-devis">-</div><div class="kpi-lbl">Devis envoyés</div><div class="kpi-edit" data-kpi="devis">Modifier</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="k-prospects">-</div><div class="kpi-lbl">Prospects contactés</div><div class="kpi-edit" data-kpi="prospects">Modifier</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="k-reponses">-</div><div class="kpi-lbl">Réponses reçues</div><div class="kpi-edit" data-kpi="reponses">Modifier</div></div>
-      <div class="kpi-card"><div class="kpi-val" id="k-posts">-</div><div class="kpi-lbl">Posts LinkedIn</div><div class="kpi-edit" data-kpi="posts">Modifier</div></div>
-    </div>
-    
-    <div class="grid-2" style="margin-bottom:16px;">
-      <div class="card">
-        <div class="card-title">Objectif décembre 2026</div>
-        <div style="font-size:13px;color:var(--text-muted);margin-bottom:8px;">CA mensuel cible</div>
-        <div style="font-size:28px;font-weight:700;color:var(--text-strong);">15 000 – 20 000 €</div>
-        <div style="margin-top:12px;font-size:12px;color:var(--text-muted);">Progression</div>
-        <div class="progress-bar"><div class="progress-fill" id="dash-progress" style="width:0%"></div></div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="dash-progress-label">0 % de l'objectif septembre</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Actions prioritaires</div>
-        <div style="font-size:13px;line-height:1.8;color:var(--text);">
-          <div>→ Publier <strong style="color:#c4b5fd;">3 posts LinkedIn</strong> cette semaine</div>
-          <div>→ Contacter <strong style="color:#c4b5fd;">10 nouveaux prospects</strong></div>
-          <div>→ Relancer les <span id="dash-relances">—</span> en attente J4</div>
-          <div>→ Envoyer les devis en cours</div>
-        </div>
-      </div>
-    </div>
+<!-- ═══ DASHBOARD ════════════════════════════════════════════════════════════ -->
+<div class="page on" id="p-dash">
+  <div class="date-lbl" id="d-date">DIMANCHE 7 SEPTEMBRE</div>
+  <div class="page-greeting">Bonjour, CALMO 👋</div>
+  <div class="page-sub">Voici où en est votre prospection.</div>
 
-    <div class="card">
-      <div class="card-title">Derniers prospects</div>
-      <div class="table-wrap">
-        <table id="dash-leads-table">
-          <thead><tr><th>Nom</th><th>Entreprise</th><th>Poste</th><th>Canal</th><th>Statut</th><th>Date</th></tr></thead>
-          <tbody id="dash-leads-body"><tr><td colspan="6" style="color:var(--text-muted);text-align:center;padding:20px;">Aucun prospect. Allez dans Prospection pour en créer.</td></tr></tbody>
-        </table>
-      </div>
+  <div class="period-bar">
+    <button class="period-btn active" data-days="7">7 j</button>
+    <button class="period-btn" data-days="30">30 j</button>
+    <button class="period-btn" data-days="90">90 j</button>
+    <button class="pill-btn" id="btn-dash-activity" style="margin-left:auto">⏱ Activité</button>
+    <button class="pill-btn" onclick="goPage('pipe')">👥 Accéder au CRM</button>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card" onclick="editKpi('prospects')">
+      <div class="kpi-label">🎯 Prospects contactés</div>
+      <div class="kpi-val" id="kv-prospects">0</div>
+      <div class="kpi-sub" id="ks-prospects">7 derniers jours</div>
+      <div class="kpi-mini-chart"><canvas id="chart-prospects"></canvas></div>
+    </div>
+    <div class="kpi-card" onclick="editKpi('reponses')">
+      <div class="kpi-label">💬 Réponses <span class="badge-pct" id="kv-pct">0 %</span></div>
+      <div class="kpi-val" id="kv-reponses">0</div>
+      <div class="kpi-sub" style="line-height:1.5">% de taux<br>de réponse</div>
+    </div>
+    <div class="kpi-card" onclick="editKpi('formations')">
+      <div class="kpi-label">⭐ Prospects qualifiés</div>
+      <div class="kpi-val" id="kv-formations">0</div>
+      <div class="kpi-sub" id="ks-formations">7 derniers jours</div>
     </div>
   </div>
 
-  <!-- PROSPECTION -->
-  <div class="page" id="page-prospection">
-    <div class="page-header">
-      <div class="page-title">Prospection</div>
-      <div class="page-sub">Générez un message personnalisé par Claude pour chaque prospect</div>
-    </div>
-
-    <div class="grid-2">
-      <div>
-        <div class="card" style="margin-bottom:16px;">
-          <div class="card-title">Profil du prospect</div>
-          <div class="form-group">
-            <label class="form-label">Prénom + Nom *</label>
-            <input class="form-input" id="p-nom" placeholder="ex: Sophie Martin">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Entreprise *</label>
-            <input class="form-input" id="p-entreprise" placeholder="ex: BTP Leleu, Mérignac">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Poste</label>
-            <input class="form-input" id="p-poste" placeholder="ex: Responsable RH">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Canal</label>
-            <select class="form-select" id="p-canal">
-              <option value="LinkedIn">LinkedIn</option>
-              <option value="Email">Email</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Signal d'entrée (ce que vous avez vu)</label>
-            <textarea class="form-textarea" id="p-signal" placeholder="ex: Offre d'emploi technicien électricien postée hier. OU Post sur un accident chantier. OU Commentaire sur habilitation électrique."></textarea>
-          </div>
-          <button class="btn btn-primary" id="btn-generate-prospect" style="width:100%;">
-            <span>⚡</span> Générer les messages
-          </button>
-        </div>
+  <div class="g2">
+    <!-- Activité -->
+    <div class="activity-card">
+      <div class="activity-head">
+        <div class="card-title">🎯 Activité de prospection</div>
+        <div class="card-sub" id="activity-period">7 derniers jours</div>
       </div>
-
-      <div>
-        <div class="card" style="margin-bottom:12px;">
-          <div class="card-title">Message LinkedIn (≤ 200 car.)</div>
-          <div class="output" id="out-linkedin"><span class="output-placeholder">Le message apparaîtra ici...</span></div>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:6px;" id="count-linkedin"></div>
-        </div>
-        <div class="card" style="margin-bottom:12px;">
-          <div class="card-title">Email J0</div>
-          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Objet : <span id="out-objet" style="color:var(--text);">—</span></div>
-          <div class="output" id="out-email-j0"><span class="output-placeholder">L'email apparaîtra ici...</span></div>
-        </div>
-        <div class="card" style="margin-bottom:12px;">
-          <div class="card-title">Relance J4</div>
-          <div class="output" id="out-email-j4"><span class="output-placeholder">La relance J4 apparaîtra ici...</span></div>
-        </div>
-        <button class="btn btn-secondary" id="btn-save-lead" style="width:100%;" disabled>
-          💾 Ajouter au pipeline
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- LINKEDIN -->
-  <div class="page" id="page-linkedin">
-    <div class="page-header">
-      <div class="page-title">Connexion LinkedIn</div>
-      <div class="page-sub">Publie des posts et envoie des messages directement depuis BES</div>
-    </div>
-
-    <!-- Statuts -->
-    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
-      <span class="li-badge li-off" id="li-status-badge">⚪ Non connecté</span>
-      <span class="li-badge li-off" id="ext-status-badge">⚪ Extension non installée</span>
-      <span id="li-profile-info" style="font-size:13px;display:none"></span>
-    </div>
-
-    <div class="grid-2" style="margin-bottom:16px">
-
-      <!-- Carte 1 : OAuth LinkedIn -->
-      <div class="card">
-        <div class="card-title">1. Connexion LinkedIn OAuth</div>
-        <div class="form-group">
-          <label class="form-label">Client ID <span style="color:var(--green)">(✓ pré-configuré)</span></label>
-          <input class="form-input" id="li-client-id" value="78n87entgvqaup" readonly style="color:var(--green);cursor:default">
-        </div>
-        <div class="form-group">
-          <label class="form-label">URL du Worker Cloudflare</label>
-          <input class="form-input" id="li-worker-url" placeholder="https://bes-oauth.TON-COMPTE.workers.dev">
-          <div style="font-size:11px;color:var(--text-muted);margin-top:4px">Nécessaire pour l'échange OAuth sécurisé. Guide ci-dessous.</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
-          <button class="btn btn-primary" id="btn-li-save-config">💾 Sauvegarder</button>
-          <button class="btn btn-primary" id="btn-li-connect" style="background:#0077b5">🔗 Se connecter à LinkedIn</button>
-          <button class="btn btn-secondary" id="btn-li-disconnect" style="display:none">🔓 Déconnecter</button>
-        </div>
-        <div style="padding:12px;background:rgba(109,31,224,.08);border:1px solid rgba(109,31,224,.2);border-radius:8px;font-size:12px;color:#c4b5fd;line-height:1.8">
-          <b>Déployer le Worker Cloudflare (5 min) :</b><br>
-          1. Va sur <a href="https://dash.cloudflare.com" target="_blank" style="color:#a78bfa">dash.cloudflare.com</a> → Workers → Créer<br>
-          2. Colle le code du fichier <code>worker/worker.js</code> depuis <a href="https://github.com/eynorsite/bes-app" target="_blank" style="color:#a78bfa">GitHub</a><br>
-          3. Variables du Worker → Ajoute <code>LI_CLIENT_SECRET</code> avec ta valeur<br>
-          4. Copie l'URL du Worker et colle-la ci-dessus<br>
-          5. Clique <b>Sauvegarder</b> puis <b>Se connecter à LinkedIn</b>
-        </div>
-      </div>
-
-      <!-- Carte 2 : Extension Chrome -->
-      <div class="card">
-        <div class="card-title">2. Extension Chrome — envoi automatique</div>
-        <div style="font-size:13px;color:var(--text-muted);line-height:1.8;margin-bottom:12px">
-          L'extension envoie les messages de prospection directement dans la boîte de message LinkedIn.
-        </div>
-        <div style="background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.2);border-radius:8px;padding:12px;font-size:12px;color:var(--text);line-height:1.9;margin-bottom:12px">
-          <b style="color:#4ade80">① Télécharger</b><br>
-          → <a href="https://github.com/eynorsite/bes-app/tree/main/extension" target="_blank" style="color:#a78bfa">github.com/eynorsite/bes-app</a> → dossier <code>extension/</code><br><br>
-          <b style="color:#4ade80">② Installer dans Chrome</b><br>
-          → <code>chrome://extensions</code> → Mode développeur ON<br>
-          → "Charger l'extension non empaquetée" → dossier <code>extension/</code><br><br>
-          <b style="color:#4ade80">③ Copier l'ID</b><br>
-          → L'ID apparaît sous le nom de l'extension (ex: <code>abcdefgh...</code>)
-        </div>
-        <div class="form-group">
-          <label class="form-label">ID de l'extension Chrome</label>
-          <input class="form-input" id="li-ext-id" placeholder="abcdefghijklmnopqrstuvwx">
-        </div>
-        <button class="btn btn-secondary" id="btn-ext-save">💾 Sauvegarder l'ID</button>
+      <div class="activity-val" id="activity-total">0</div>
+      <div class="chart-wrap" id="bar-chart"></div>
+      <div class="chart-legend">
+        <div class="leg"><div class="leg-dot" style="background:#111"></div>Invitations</div>
+        <div class="leg"><div class="leg-dot" style="background:#d1d5db"></div>Messages</div>
       </div>
     </div>
 
-    <!-- Publier un post -->
-    <div class="card">
-      <div class="card-title">📤 Publier un post LinkedIn</div>
-      <div class="form-group">
-        <textarea class="form-textarea" id="li-test-post" placeholder="Colle ton post ici, ou génère-en un depuis l'onglet Posts LinkedIn puis reviens ici..." style="min-height:140px"></textarea>
+    <!-- À faire -->
+    <div class="todo-card">
+      <div class="todo-head">
+        <div class="todo-title">⭐ À faire</div>
+        <div class="todo-count" id="todo-count">0</div>
       </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn btn-primary" id="btn-li-publish" style="background:#0077b5">📤 Publier maintenant sur LinkedIn</button>
-        <button class="btn btn-secondary" id="btn-li-copy-post">📋 Copier seulement</button>
-      </div>
-      <div style="margin-top:8px;font-size:11px;color:var(--text-muted)">
-        La publication nécessite d'être connecté via OAuth + avoir le Worker Cloudflare configuré.
-      </div>
-      <div id="li-publish-result" style="margin-top:10px;font-size:13px;display:none"></div>
-    </div>
-  </div>
-
-  <!-- PIPELINE -->
-  <div class="page" id="page-pipeline">
-    <div class="page-header">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div>
-          <div class="page-title">Pipeline leads</div>
-          <div class="page-sub">Tous vos prospects et leur statut</div>
-        </div>
-        <button class="btn btn-primary" id="btn-add-lead-manual">+ Ajouter manuellement</button>
-      </div>
-    </div>
-    <div class="card">
-      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;" id="pipeline-filters">
-        <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;" data-filter="all">Tous</button>
-        <button class="btn btn-ghost" style="font-size:12px;" data-filter="à envoyer">À envoyer</button>
-        <button class="btn btn-ghost" style="font-size:12px;" data-filter="envoyé">Envoyé</button>
-        <button class="btn btn-ghost" style="font-size:12px;" data-filter="répondu">Répondu</button>
-        <button class="btn btn-ghost" style="font-size:12px;" data-filter="relance J4">Relance J4</button>
-        <button class="btn btn-ghost" style="font-size:12px;" data-filter="fermé positif">Positif ✓</button>
-      </div>
-      <div class="table-wrap">
-        <table>
-          <thead><tr><th>Nom</th><th>Entreprise</th><th>Poste</th><th>Canal</th><th>Statut</th><th>Date</th><th></th></tr></thead>
-          <tbody id="pipeline-body"><tr><td colspan="7" style="color:var(--text-muted);text-align:center;padding:24px;">Chargement...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <!-- POSTS LINKEDIN -->
-  <div class="page" id="page-posts">
-    <div class="page-header">
-      <div class="page-title">Posts LinkedIn</div>
-      <div class="page-sub">Générez et gérez vos posts avec Claude</div>
-    </div>
-    
-    <div class="grid-2" style="margin-bottom:20px;">
-      <div class="card">
-        <div class="card-title">Nouveau post</div>
-        <div class="form-group">
-          <label class="form-label">Angle</label>
-          <select class="form-select" id="post-angle">
-            <option value="reglementaire">Réglementaire — obligation employeur, risque pénal</option>
-            <option value="ve">VE / NF C 18-550 — bornes, flotte électrique</option>
-            <option value="reactivite">Réactivité — devis 24h, disponibilité intra</option>
-            <option value="preuve">Preuve sociale — témoignage, résultat concret</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">ICP ciblé</label>
-          <select class="form-select" id="post-icp">
-            <option value="DRH PME Gironde">DRH PME Gironde (Sandrine)</option>
-            <option value="Responsable technique / chef d'atelier">Responsable technique / chef d'atelier (Rémi)</option>
-            <option value="Gestionnaire de flotte VE">Gestionnaire de flotte VE (Élodie)</option>
-            <option value="Responsable QHSE ETI">Responsable QHSE ETI (Nicolas)</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Contexte ou idée (optionnel)</label>
-          <textarea class="form-textarea" id="post-detail" placeholder="ex: On vient de faire une journée intra chez une PME à Mérignac, 6 techniciens habilités en une journée..."></textarea>
-        </div>
-        <button class="btn btn-primary" id="btn-gen-post" style="width:100%;">
-          <span>✍️</span> Générer le post
-        </button>
-      </div>
-      <div class="card">
-        <div class="card-title">Aperçu du post généré</div>
-        <div class="output" id="out-post" style="min-height:200px;"><span class="output-placeholder">Le post apparaîtra ici...</span></div>
-        <div style="display:flex;gap:8px;margin-top:10px;">
-          <button class="btn btn-secondary" id="btn-copy-post" style="flex:1;">📋 Copier</button>
-          <button class="btn btn-ghost" id="btn-regen-post">🔄 Régénérer</button>
+      <div id="todo-list">
+        <div style="padding:20px 18px;font-size:13px;color:var(--txm);text-align:center">
+          Aucun prospect à relancer.<br>Allez dans Moteur d'acquisition.
         </div>
       </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">Posts générés <span id="posts-count" style="color:var(--text-muted);font-weight:400;"></span></div>
-      <div id="posts-list">
-        <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:24px;">Aucun post généré pour l'instant.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- STRATEGIE -->
-  <div class="page" id="page-strategie">
-    <div class="page-header">
-      <div class="page-title">Stratégie</div>
-      <div class="page-sub">Positionnement retenu et plan 90 jours — sept. à déc. 2026</div>
-    </div>
-
-    <div class="alert alert-ok" style="margin-bottom:20px;">
-      ⚡ <strong>EYNOR Formation</strong> — seul organisme Qualiopi en Gironde qui répond en 24h, se déplace chez vous et maîtrise les habilitations pour véhicules électriques.
-    </div>
-
-    <div class="grid-3" style="margin-bottom:20px;">
-      <div class="plan-month">
-        <div class="plan-month-title">Septembre — Ancrer</div>
-        <div class="plan-month-ca">3 – 5k€</div>
-        <div style="font-size:11px;color:var(--text-muted);">1 formation signée</div>
-        <div class="plan-items">
-          <div class="plan-item">3 posts/semaine LinkedIn</div>
-          <div class="plan-item">Page pilier SEO eynor.fr</div>
-          <div class="plan-item">Séquence email bienvenue</div>
-          <div class="plan-item">Badge "devis 24h" visible</div>
-        </div>
-      </div>
-      <div class="plan-month">
-        <div class="plan-month-title">Octobre — Convertir</div>
-        <div class="plan-month-ca">6 – 9k€</div>
-        <div style="font-size:11px;color:var(--text-muted);">3 formations signées</div>
-        <div class="plan-items">
-          <div class="plan-item">Outbound 10 prospects/sem.</div>
-          <div class="plan-item">Séquence J0/J4/J12 active</div>
-          <div class="plan-item">1er OF partenaire activé</div>
-          <div class="plan-item">1 article SEO publié</div>
-        </div>
-      </div>
-      <div class="plan-month">
-        <div class="plan-month-title">Nov–Déc — Accélérer</div>
-        <div class="plan-month-ca">15 – 20k€</div>
-        <div style="font-size:11px;color:var(--text-muted);">6+ formations/mois</div>
-        <div class="plan-items">
-          <div class="plan-item">Campagne recyclage triennal</div>
-          <div class="plan-item">2 OF partenaires/mois</div>
-          <div class="plan-item">1 contenu SEO/mois</div>
-          <div class="plan-item">1 témoignage client/mois</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <div class="card-title">5 ICP prioritaires</div>
-        <div style="font-size:13px;line-height:2;color:var(--text);">
-          <div>👩 <strong style="color:#c4b5fd;">Sandrine</strong> — DRH PME industrie/BTP, Gironde</div>
-          <div>👨 <strong style="color:#c4b5fd;">Nicolas</strong> — Responsable QHSE ETI, NAq</div>
-          <div>🔧 <strong style="color:#c4b5fd;">Rémi</strong> — Responsable technique / chef d'atelier</div>
-          <div>🔋 <strong style="color:#c4b5fd;">Élodie</strong> — Gestionnaire de flotte VE</div>
-          <div>🤝 <strong style="color:#c4b5fd;">Thomas</strong> — OF partenaire hors Gironde</div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-title">Ce qu'on NE dit pas</div>
-        <div style="font-size:13px;line-height:2;color:var(--text-muted);">
-          <div>✗ "Nous sommes les moins chers"</div>
-          <div>✗ "Solutions", "accompagnement"</div>
-          <div>✗ "Passion" ou "vocation"</div>
-          <div>✗ "N'hésitez pas à nous contacter"</div>
-          <div>✗ Proposition de RDV au 1er contact</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</main>
-
-<!-- Modal ajout manuel -->
-<div class="modal-overlay" id="modal-add-lead">
-  <div class="modal">
-    <div class="modal-title">Ajouter un prospect</div>
-    <div class="form-group"><label class="form-label">Nom *</label><input class="form-input" id="m-nom" placeholder="Prénom Nom"></div>
-    <div class="form-group"><label class="form-label">Entreprise *</label><input class="form-input" id="m-entreprise"></div>
-    <div class="form-group"><label class="form-label">Poste</label><input class="form-input" id="m-poste"></div>
-    <div class="form-group"><label class="form-label">Canal</label><select class="form-select" id="m-canal"><option>LinkedIn</option><option>Email</option></select></div>
-    <div class="form-group"><label class="form-label">Statut</label>
-      <select class="form-select" id="m-statut">
-        <option value="à envoyer">À envoyer</option>
-        <option value="envoyé">Envoyé</option>
-        <option value="répondu">Répondu</option>
-        <option value="relance J4">Relance J4</option>
-        <option value="relance J12">Relance J12</option>
-        <option value="fermé positif">Fermé positif</option>
-        <option value="fermé négatif">Fermé négatif</option>
-      </select>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="btn-modal-cancel">Annuler</button>
-      <button class="btn btn-primary" id="btn-modal-save">Ajouter</button>
+      <div class="todo-more" onclick="goPage('pipe')">... voir tous dans CRM</div>
     </div>
   </div>
 </div>
 
-<!-- KPI edit modal -->
-<div class="modal-overlay" id="modal-kpi">
-  <div class="modal">
-    <div class="modal-title">Modifier le KPI</div>
-    <input type="hidden" id="kpi-key">
-    <div class="form-group"><label class="form-label">Valeur</label><input class="form-input" id="kpi-val" type="number" min="0"></div>
-    <div class="modal-actions">
-      <button class="btn btn-ghost" id="btn-kpi-cancel">Annuler</button>
-      <button class="btn btn-primary" id="btn-kpi-save">Sauvegarder</button>
+<!-- ═══ FLOW ═════════════════════════════════════════════════════════════════ -->
+<div class="page" id="p-flow">
+  <div class="page-greeting">Flow</div>
+  <div class="page-sub">Vos automatisations de prospection</div>
+  <div class="card" style="text-align:center;padding:40px">
+    <div style="font-size:40px;margin-bottom:12px">⚡</div>
+    <div style="font-size:15px;font-weight:600;color:var(--tx);margin-bottom:6px">Automatisation LinkedIn</div>
+    <div style="font-size:13px;color:var(--txm);margin-bottom:20px">Configurez des séquences automatiques d'invitations et de messages.</div>
+    <button class="btn btn-p" onclick="goPage('prosp')">Démarrer avec le Moteur d'acquisition</button>
+  </div>
+</div>
+
+<!-- ═══ PROSPECTION / MOTEUR ══════════════════════════════════════════════════ -->
+<div class="page" id="p-prosp">
+  <div class="page-greeting">Moteur d'acquisition</div>
+  <div class="page-sub">Générez vos messages de prospection personnalisés</div>
+
+  <div class="g22">
+    <div>
+      <div class="card">
+        <div class="card-head"><div class="card-title">Profil du prospect</div></div>
+        <div class="fg"><label class="flbl">Prénom + Nom *</label><input class="fi" id="r-nom" placeholder="ex : Sophie Martin"></div>
+        <div class="fg"><label class="flbl">Entreprise *</label><input class="fi" id="r-ent" placeholder="ex : BTP Leleu, Mérignac"></div>
+        <div class="fg"><label class="flbl">Poste</label><input class="fi" id="r-poste" placeholder="ex : Responsable RH"></div>
+        <div class="fg"><label class="flbl">Profil ICP</label>
+          <select class="fs" id="r-icp">
+            <option value="drh">DRH / RH — PME industrie/BTP</option>
+            <option value="qhse">Responsable QHSE — ETI</option>
+            <option value="tech">Responsable technique / Chef d'atelier</option>
+            <option value="ve">Gestionnaire de flotte VE</option>
+            <option value="of">OF partenaire hors Gironde</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flbl">Signal d'entrée</label>
+          <select class="fs" id="r-signal">
+            <option value="emploi">Offre d'emploi technicien / électricien</option>
+            <option value="securite">Post sécurité / accident au travail</option>
+            <option value="expire">Habilitations arrivant à expiration</option>
+            <option value="ve">Installation bornes IRVE / flotte VE</option>
+            <option value="inspection">Inspection ou contrôle annoncé</option>
+            <option value="autre">Autre</option>
+          </select>
+        </div>
+        <div class="fg"><label class="flbl">Contexte (optionnel)</label>
+          <textarea class="fta" id="r-detail" placeholder="Ce que tu as vu exactement..."></textarea>
+        </div>
+        <button class="btn btn-p btn-full" id="btn-gen-p">⚡ Générer les messages</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-head"><div class="card-title">Message LinkedIn <span id="li-count" style="font-size:11px;font-weight:400;color:var(--txm)"></span></div></div>
+        <div class="output" id="out-li"><span class="out-ph">Le message apparaîtra ici...</span></div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-head">
+          <div class="card-title">Email J0</div>
+          <div style="font-size:12px;color:var(--txm)">Objet : <span id="out-obj" style="color:var(--tx);font-weight:500">—</span></div>
+        </div>
+        <div class="output" id="out-j0"><span class="out-ph">L'email J0 apparaîtra ici...</span></div>
+      </div>
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-head"><div class="card-title">Relance J4</div></div>
+        <div class="output" id="out-j4"><span class="out-ph">La relance J4 apparaîtra ici...</span></div>
+      </div>
+      <button class="btn btn-p btn-full" id="btn-save-p" disabled>➕ Ajouter au CRM</button>
+
+      <div class="prompt-box" id="prompt-box">
+        <p>📋 Prompt Claude pour une version encore plus personnalisée :</p>
+        <div class="prompt-txt" id="prompt-txt"></div>
+        <button class="btn btn-s" style="margin-top:10px;font-size:12px" onclick="cp(document.getElementById('prompt-txt').textContent)">Copier le prompt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CRM / PIPELINE ════════════════════════════════════════════════════════ -->
+<div class="page" id="p-pipe">
+  <div class="page-greeting">CRM</div>
+  <div class="page-sub">Tous vos prospects et leur avancement</div>
+  <div class="card">
+    <div class="card-head">
+      <div style="display:flex;gap:7px;flex-wrap:wrap" id="pipe-filters">
+        <button class="btn btn-p" style="font-size:12px;padding:5px 12px" data-f="all">Tous</button>
+        <button class="btn btn-s" style="font-size:12px;padding:5px 12px" data-f="à envoyer">À envoyer</button>
+        <button class="btn btn-s" style="font-size:12px;padding:5px 12px" data-f="envoyé">Envoyé</button>
+        <button class="btn btn-s" style="font-size:12px;padding:5px 12px" data-f="répondu">Répondu</button>
+        <button class="btn btn-s" style="font-size:12px;padding:5px 12px" data-f="relance J4">Relance J4</button>
+        <button class="btn btn-s" style="font-size:12px;padding:5px 12px" data-f="fermé positif">Positif ✓</button>
+      </div>
+      <button class="btn btn-p" onclick="openAddModal()">+ Ajouter</button>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Nom</th><th>Entreprise</th><th>Poste</th><th>Canal</th><th>Statut</th><th>Date</th><th></th></tr></thead>
+        <tbody id="pipe-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CAMPAGNES ═════════════════════════════════════════════════════════════ -->
+<div class="page" id="p-camp">
+  <div class="page-greeting">Campagnes</div>
+  <div class="page-sub">Séquences automatisées de prospection</div>
+  <div class="card" style="text-align:center;padding:40px">
+    <div style="font-size:36px;margin-bottom:10px">📣</div>
+    <div style="font-size:14px;font-weight:600;margin-bottom:6px">Bientôt disponible</div>
+    <div style="font-size:13px;color:var(--txm)">Les campagnes multi-touch automatisées arrivent dans la prochaine version.</div>
+  </div>
+</div>
+
+<!-- ═══ POSTS LINKEDIN ════════════════════════════════════════════════════════ -->
+<div class="page" id="p-posts">
+  <div class="page-greeting">Posts LinkedIn</div>
+  <div class="page-sub">Générez vos posts hebdomadaires dans le style EYNOR</div>
+
+  <div class="g22" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-head"><div class="card-title">Nouveau post</div></div>
+      <div class="fg"><label class="flbl">Angle</label>
+        <select class="fs" id="pa-angle">
+          <option value="regl">⚖️ Réglementaire — obligation, risque pénal</option>
+          <option value="ve">🔋 VE / NF C 18-550 — bornes, flotte électrique</option>
+          <option value="react">⚡ Réactivité — devis 24h, disponible en Gironde</option>
+          <option value="preuve">🌟 Preuve sociale — mission réalisée, résultat</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">ICP ciblé</label>
+        <select class="fs" id="pa-icp">
+          <option>DRH PME Gironde</option>
+          <option>Responsable technique / chef d'atelier</option>
+          <option>Gestionnaire de flotte VE</option>
+          <option>Responsable QHSE ETI</option>
+        </select>
+      </div>
+      <div class="fg"><label class="flbl">Contexte / idée (optionnel)</label>
+        <textarea class="fta" id="pa-detail" placeholder="ex : Formation intra PME Mérignac, 6 techniciens en une journée..."></textarea>
+      </div>
+      <button class="btn btn-p btn-full" id="btn-gen-post">✍️ Générer le post</button>
+    </div>
+    <div class="card">
+      <div class="card-head"><div class="card-title">Aperçu</div></div>
+      <div class="output" id="out-post" style="min-height:200px"><span class="out-ph">Le post apparaîtra ici...</span></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-s" style="flex:1;font-size:12px" id="btn-cp-post">📋 Copier</button>
+        <button class="btn btn-s" style="font-size:12px" id="btn-li-send-post" title="Publier sur LinkedIn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="#0077b5"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          Publier
+        </button>
+        <button class="btn btn-s" style="font-size:12px" id="btn-save-post">💾</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head">
+      <div class="card-title">Posts sauvegardés <span id="posts-cnt" style="font-size:12px;font-weight:400;color:var(--txm)"></span></div>
+    </div>
+    <div id="posts-list"><div style="font-size:13px;color:var(--txm);text-align:center;padding:20px">Aucun post sauvegardé.</div></div>
+  </div>
+</div>
+
+<!-- ═══ STUDIO ════════════════════════════════════════════════════════════════ -->
+<div class="page" id="p-studio">
+  <div style="text-align:center;margin-bottom:24px">
+    <div class="page-greeting" style="font-size:22px">Studio</div>
+    <div class="page-sub">Vos styles d'écriture, templates de posts et sources de contenu</div>
+  </div>
+
+  <div class="stabs">
+    <button class="stab active" data-st="styles">🎨 Styles</button>
+    <button class="stab" data-st="templates">📄 Templates</button>
+    <button class="stab" data-st="sources">📚 Sources</button>
+    <button class="stab" data-st="brief">📋 Brief</button>
+  </div>
+
+  <!-- Styles -->
+  <div id="st-styles">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--txm)">Analysez des profils LinkedIn pour extraire leur style d'écriture unique</div>
+      <button class="btn btn-p" onclick="addStyleProfile()">+ Analyser un Profil</button>
+    </div>
+    <div class="studio-grid" id="styles-grid"></div>
+  </div>
+
+  <!-- Templates -->
+  <div id="st-templates" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:var(--txm)">Vos templates de posts réutilisables</div>
+      <button class="btn btn-p" onclick="addTemplate()">+ Créer un template</button>
+    </div>
+    <div id="templates-list">
+      <div class="studio-grid" id="tpl-grid"></div>
+    </div>
+  </div>
+
+  <!-- Sources -->
+  <div id="st-sources" style="display:none">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">Sources de contenu</div>
+      <div style="font-size:13px;color:var(--txm);line-height:1.8">
+        <div>→ <b>01-marche.md</b> — Analyse marché Gironde/NAq (mise à jour mensuelle)</div>
+        <div>→ <b>02-client.md</b> — 5 personas + parcours d'achat</div>
+        <div>→ <b>Previnfo.net</b> — Forum QHSE (8 128 membres)</div>
+        <div>→ <b>LinkedIn</b> — Votre fil + hashtags #QHSE #habilitationelectrique</div>
+        <div>→ <b>INRS</b> — Actualités accidents électriques</div>
+        <div>→ <b>ACR / Batirama</b> — Marché GTB et BACS</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Brief -->
+  <div id="st-brief" style="display:none">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">Brief éditorial EYNOR</div>
+      <div style="background:#f0f4ff;border:1px solid #c7d7fd;border-radius:8px;padding:14px;font-size:13px;color:#1e3a8a;line-height:1.8">
+        <b>Positionnement :</b> Seul OF Qualiopi en Gironde qui répond en 24h, se déplace et maîtrise NF C 18-550 (VE).<br>
+        <b>Ton :</b> Pair expert. Concret. Jamais commercial. Phrases courtes alternées avec longues.<br>
+        <b>Interdits :</b> Gras Markdown, tirets cadratins, "solutions", "accompagnement", "passion", "incontournable".<br>
+        <b>Ancrage :</b> Chiffres précis, noms, lieux, jargon terrain.<br>
+        <b>Structure LinkedIn :</b> Accroche fragmentée → corps → résolution → refrain 2 lignes.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ LINKEDIN ══════════════════════════════════════════════════════════════ -->
+<div class="page" id="p-linkedin">
+  <div class="page-greeting">LinkedIn</div>
+  <div class="page-sub">Connexion OAuth et extension Chrome</div>
+
+  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;align-items:center">
+    <span class="li-badge li-off" id="li-status-badge">⚪ Non connecté</span>
+    <span class="li-badge li-off" id="ext-status-badge">⚪ Extension non installée</span>
+    <span id="li-profile-info" style="font-size:13px;display:none"></span>
+  </div>
+
+  <div class="g22">
+    <div class="card">
+      <div class="card-head"><div class="card-title">1. Connexion LinkedIn OAuth</div></div>
+      <div class="fg">
+        <label class="flbl">Client ID <span style="color:var(--grn)">(✓ pré-configuré)</span></label>
+        <input class="fi" id="li-client-id" value="78n87entgvqaup" readonly style="color:var(--grn)">
+      </div>
+      <div class="fg">
+        <label class="flbl">URL du Worker Cloudflare</label>
+        <input class="fi" id="li-worker-url" placeholder="https://bes-oauth.xxx.workers.dev">
+        <div style="font-size:11px;color:var(--txm);margin-top:4px">Nécessaire pour l'échange OAuth sécurisé.</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <button class="btn btn-p" id="btn-li-save-config">💾 Sauvegarder</button>
+        <button class="btn btn-p" id="btn-li-connect" style="background:#0077b5">🔗 Se connecter à LinkedIn</button>
+        <button class="btn btn-s" id="btn-li-disconnect" style="display:none">Déconnecter</button>
+      </div>
+      <div style="padding:12px;background:#f0f4ff;border:1px solid #c7d7fd;border-radius:8px;font-size:12px;color:#3b4e8c;line-height:1.8">
+        <b>Déployer le Worker Cloudflare :</b><br>
+        1. <a href="https://dash.cloudflare.com" target="_blank" style="color:#3b4e8c">dash.cloudflare.com</a> → Workers → Créer<br>
+        2. Colle le code de <a href="https://github.com/eynorsite/bes-app/blob/main/worker/worker.js" target="_blank" style="color:#3b4e8c">worker/worker.js</a><br>
+        3. Variables → <code>LI_CLIENT_SECRET</code> = ton secret<br>
+        4. Copie l'URL → colle ci-dessus → Sauvegarder
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-head"><div class="card-title">2. Extension Chrome</div></div>
+      <div style="font-size:13px;color:var(--txm);line-height:1.8;margin-bottom:12px">Envoie les messages de prospection directement dans LinkedIn.</div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:12px;font-size:12px;line-height:1.9;margin-bottom:12px">
+        <b style="color:var(--grn)">① Télécharger</b><br>
+        <a href="https://github.com/eynorsite/bes-app/tree/main/extension" target="_blank" style="color:#166534">github.com/eynorsite/bes-app</a> → <code>extension/</code><br>
+        <b style="color:var(--grn)">② Installer Chrome</b><br>
+        <code>chrome://extensions</code> → Dev mode ON → Charger le dossier<br>
+        <b style="color:var(--grn)">③ Copier l'ID</b> affiché sous le nom
+      </div>
+      <div class="fg">
+        <label class="flbl">ID de l'extension</label>
+        <input class="fi" id="li-ext-id" placeholder="abcdefghijklmnop">
+      </div>
+      <button class="btn btn-s" id="btn-ext-save">💾 Sauvegarder l'ID</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-head"><div class="card-title">📤 Publier un post LinkedIn</div></div>
+    <div class="fg"><textarea class="fta" id="li-test-post" style="min-height:140px" placeholder="Colle ton post ici ou génère-en un depuis Posts..."></textarea></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-p" id="btn-li-publish" style="background:#0077b5">📤 Publier maintenant</button>
+      <button class="btn btn-s" id="btn-li-copy-post">📋 Copier seulement</button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- Modal KPI -->
+<div class="mo" id="mo-kpi">
+  <div class="mbox">
+    <div class="mtitle" id="kpi-lbl">Modifier</div>
+    <div class="fg"><label class="flbl">Valeur</label><input class="fi" id="kpi-input" type="number" min="0"></div>
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-kpi')">Annuler</button>
+      <button class="btn btn-p" onclick="saveKpi()">Sauvegarder</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ajout lead -->
+<div class="mo" id="mo-lead">
+  <div class="mbox">
+    <div class="mtitle">Ajouter un prospect</div>
+    <div class="fg"><label class="flbl">Nom *</label><input class="fi" id="al-nom" placeholder="Prénom Nom"></div>
+    <div class="fg"><label class="flbl">Entreprise *</label><input class="fi" id="al-ent"></div>
+    <div class="fg"><label class="flbl">Poste</label><input class="fi" id="al-poste"></div>
+    <div class="fg"><label class="flbl">Canal</label><select class="fs" id="al-canal"><option>LinkedIn</option><option>Email</option></select></div>
+    <div class="fg"><label class="flbl">Statut</label>
+      <select class="fs" id="al-statut">
+        <option value="à envoyer">À envoyer</option>
+        <option value="envoyé">Envoyé</option>
+        <option value="répondu">Répondu</option>
+        <option value="relance J4">Relance J4</option>
+        <option value="fermé positif">Fermé positif</option>
+        <option value="fermé négatif">Fermé négatif</option>
+      </select>
+    </div>
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-lead')">Annuler</button>
+      <button class="btn btn-p" onclick="saveAddLead()">Ajouter</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ajout style -->
+<div class="mo" id="mo-style">
+  <div class="mbox">
+    <div class="mtitle">Analyser un profil LinkedIn</div>
+    <div class="fg"><label class="flbl">Nom du profil</label><input class="fi" id="style-nom" placeholder="ex : Marvin Ndiaye"></div>
+    <div class="fg"><label class="flbl">URL LinkedIn</label><input class="fi" id="style-url" placeholder="https://linkedin.com/in/..."></div>
+    <div class="fg"><label class="flbl">3 exemples de posts (1 par ligne)</label><textarea class="fta" id="style-posts" style="min-height:100px" placeholder="Exemple 1&#10;Exemple 2&#10;Exemple 3"></textarea></div>
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-style')">Annuler</button>
+      <button class="btn btn-p" onclick="saveStyle()">Analyser</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal ajout template -->
+<div class="mo" id="mo-tpl">
+  <div class="mbox">
+    <div class="mtitle">Créer un template</div>
+    <div class="fg"><label class="flbl">Nom du template</label><input class="fi" id="tpl-nom" placeholder="ex : Post réglementaire — obligation employeur"></div>
+    <div class="fg"><label class="flbl">Texte du template</label><textarea class="fta" id="tpl-txt" style="min-height:120px" placeholder="[ACCROCHE]&#10;&#10;[CORPS]&#10;&#10;[CTA]"></textarea></div>
+    <div class="mact">
+      <button class="btn btn-g" onclick="closeMo('mo-tpl')">Annuler</button>
+      <button class="btn btn-p" onclick="saveTemplate()">Sauvegarder</button>
     </div>
   </div>
 </div>
 
 <div id="toast"></div>
-
 <script src="linkedin.js"></script>
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
